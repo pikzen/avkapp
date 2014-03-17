@@ -1,0 +1,324 @@
+// Global Foundation Settings
+@import "settings";
+@import "normalize";
+
+// Importing all of foundation is absolutely overkill
+@import "foundation";
+
+//------------------------------------------------------------
+$z_front: 3;
+$z_back: 1;
+//------------------------------------------------------------
+
+@mixin triangle-right($size, $color) {
+	width: 0;
+	height: 0;
+	border-top: $size solid transparent;
+	border-bottom: $size solid transparent;
+	border-left: $size solid $color;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//                  GLOBAL STUFF
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+.nav-open {
+    left: 0;
+}
+
+// Get the navigation off-canvas
+.nav-closed {
+    left: -240px;
+}
+
+.page-name {
+	text-align: center;
+}
+ .content {
+        float: left;
+        width: 75%;
+        margin-bottom: 50px;
+        transition: margin-left 0.2s linear;
+
+        &.expand {
+        	margin-left: -120px;
+        }
+        &.cordova-app {
+            float: none;
+            margin: 0 auto;
+            ul {
+                li {
+                    display: inline;
+                }
+                li.inter-name {
+                    width: 100%;
+                    display: block;
+                }
+                i {
+                    padding-right: 30px;
+                }
+            }
+        }
+    }
+
+.navigation {
+        z-index: $z_back;
+        position: relative;
+        background-color: rgb(50, 70, 95);
+        float: left;
+        height: 100%;
+        font-size: 10pt;
+        min-width: 300px;
+        min-height: 600px;
+        color: white;
+        box-shadow: 5px 0px 10px #444;
+        border: 1px solid #2b3d52;
+        transition: left 0.2s linear;
+
+        a {
+            height: 50px;
+            display: block;
+            padding-left: 20px;
+            line-height: 50px;
+            color: white;
+            border-bottom: 1px solid #2b3d52;
+
+            &.selected{
+            		background-color: #2b3d52;
+            }
+            span {
+                width: 80%;
+                display: inline-block;
+            }
+            i {
+                width: 20%;
+                text-align: center;
+                height: 100%;
+                line-height: 50px;
+                &.large {
+                    font-size: 28px;
+                }
+            }
+            &:hover {
+                background-color: rgb(45, 60, 80);
+            }
+        }
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//                  MOBILE STYLESHEET
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+.cordova-app {
+    // Hide top bar & Navigation, both are handled directly by Android
+    &.top-bar, &.navigation {
+        display: none;
+    }
+    // Content gets the full screen size
+    &.content {
+        margin: 0 auto;
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//                  AIDE RAPIDE
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+// Hide those two at first, as no phase has been selected
+// Javascript will show/hide them as needed
+.patient-cat, .hemorragie {
+    display: none;
+}
+
+.hemorragie {
+    line-height: 40px;
+}
+
+#inr-validate {
+	display: block;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//                  INTERACTIONS
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//                  INSCRIPTION
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+.interaction {
+    i {
+        padding-right: 20px;
+    }
+}
+
+.top-bar {
+    height: 80px;
+    z-index: $z_front;
+    background-color: rgb(45, 200, 110);
+
+    .toggle-sidebar {
+        padding-right: 30px;
+        color: white;
+        font-size: 40px;
+        cursor: pointer;
+    }
+    .site-logo {
+        font-family: 'Bebas Neue';
+        font-size: 46px;
+        line-height: 80px;
+    }
+}
+
+.main-content {
+    width: 100%;
+}
+
+ul.interactions-list {
+    list-style-type: none;
+    border: 1px solid #ccc;
+    width: 100%;
+    margin-left: 0;
+
+    li {
+        &.header {
+            font-weight: bold;
+        }
+        border-bottom: 1px solid #ccc;
+        width: 100%;
+        display: inline-block;
+        padding: 5px;
+        span {
+            width: 30%;
+            display: inline-block;
+            &.inter-mod {
+                width: 50px;
+            }
+        }
+    }
+    tr {
+        border-bottom: 1px solid #ddd;
+    }
+}
+
+.important {
+    font-weight: bold;
+}
+
+.hist-user-info {
+    h5 {
+        text-align: center;
+    }
+}
+
+td.warning {
+    &.important {
+        background-color: rgb(255, 64, 64);
+    }
+    &.light {
+        background-color: rgb(255, 128, 128);
+    }
+}
+
+.inr-result {
+    margin-top: 150px;
+    text-align: center;
+    border-top: 1px solid #888;
+}
+
+.hist-chart {
+    text-align: center;
+}
+
+.button {
+    background-color: rgb(45, 200, 110);
+    &:hover, &:focus {
+        background-color: darken(rgb(45, 200, 110), 10%);
+    }
+}
+
+footer {
+    z-index: $z_front;
+    height: 40px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #444;
+    color: white;
+    line-height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    a {
+        color: white;
+    }
+}
+
+.button {
+	&.decline {
+		background-color: red !important;
+
+		&:hover {
+			background-color: dark-red !important;
+		}
+	}
+}
+
+.user {
+	.short-resume {
+		h5 {
+			display: inline;
+		}
+		i {
+			float: right;
+			margin-right: 5px;
+			margin-top: 5px;
+		}
+	}
+	span {
+		display: block;
+	}
+	border: 1px solid #ccc;
+	background-color: #fafafa;
+	margin-bottom: 20px !important;
+}
+
+@media screen and (max-width: 1220px) {
+	.navigation {
+		left: -240px;
+	}
+	.content {
+		margin-left: -120px;
+	}
+}
+
+@media screen and (max-width: 1000px) {
+	.navigation {
+		position: absolute;
+		left: -240px;
+	}
+	.content {
+		margin-left: 100px;
+
+		&.expand {
+			margin-left: 100px;
+		}
+	}
+}
