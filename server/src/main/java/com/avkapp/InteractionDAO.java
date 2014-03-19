@@ -11,12 +11,17 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class InteractionDAO {
-	
+	static final String COL_ID = "Id";
+	static final String COL_NAME = "Name";
+	static final String COL_IMPACT = "INRImpact";
+	static final String COL_NOTE = "Note";
+
+
 	public void insert(Interaction i) throws SQLException {
 		Logger log = Logger.getLogger("AVKApp");
+
 		PreparedStatement stmt = null;
-		String query = "INSERT INTO Medication(Name, INRImpact, Note)"+ 
-			       "VALUES( ?, ?, ?);";
+		String query = "INSERT INTO Medication(Name, INRImpact, Note) VALUES( ?, ?, ?);";
 		
 	
 		DatabaseHelper db = new DatabaseHelper();
@@ -40,8 +45,7 @@ public class InteractionDAO {
 		Connection conn = db.getConnection();
 
 		Statement stmt = null;
-		String query = "SELECT Name, INRImpact, Note" + 
-			       " FROM Medication;";
+		String query = "SELECT Id, Name, INRImpact, Note FROM Medication;";
 		ArrayList<Interaction> result = null;
 
 		try {
@@ -51,10 +55,10 @@ public class InteractionDAO {
 			result = new ArrayList<Interaction>();
 
 			while (rs.next()) {
-				log.log(Level.INFO, "Query has elements");
-				Interaction inter = new Interaction(rs.getString("Name"),
-								    rs.getInt("INRImpact"),
-								    rs.getString("Note"));
+				Interaction inter = new Interaction(rs.getInt(COL_ID),
+													rs.getString(COL_NAME),
+								    				rs.getInt(COL_IMPACT),
+								    				rs.getString(COL_NOTE));
 				result.add(inter);
 			}
 		}
@@ -63,6 +67,7 @@ public class InteractionDAO {
 		}
 		finally {
 			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
 		}
 		return result;	
 	}

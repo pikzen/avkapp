@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" ng-app="avkapp" > <!--<![endif]-->
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>AppliMed</title>
+
+	<link rel="stylesheet" href="stylesheets/app.css" />
+	<link href="stylesheets/font-awesome.css" rel="stylesheet">
+
+</head>
+<body ng-controller="aiderapideController">
+	<nav class="top-bar cordova-app" data-topbar>
+		<div class="large-3 columns site-logo">
+			<i class="fa fa-bars toggle-sidebar"></i>
+			AVK'App
+		</div>
+		<div class="large-3 large-offset-6 columns login">
+			<a href="#" data-dropdown="drop-login"><i class="fa fa-cog"></i></a>
+		</div>
+	</nav>
+
+	<div class="main-content">
+		<div class="navigation cordova-app nav-closed">
+			<a href="#/historique" class="site-nav-link"><span>Fiches Patients</span><i class="fa fa-tags large"></i></a>
+			<a href="#/" class="site-nav-link site-nav-link-selected"><span>Aide Rapide</span><i class="fa fa-question large"></i></a>
+			<a href="#/interactions" class="site-nav-link"><span>Interactions Médicamenteuses</span><i class="fa fa-book large"></i></a>
+		</div>
+		<div class="content cordova-app">
+			<div ng-view></div>
+		</div>
+	</div>
+
+
+	<script src="js/angular-1.2.3.js"></script>
+	<script src="js/angular-route.js"></script>
+	<script src="bower_components/jquery/jquery.js"></script>
+	<script src="bower_components/foundation/js/foundation.min.js"></script>
+	<script src="bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
+	<script src="js/interactions.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>

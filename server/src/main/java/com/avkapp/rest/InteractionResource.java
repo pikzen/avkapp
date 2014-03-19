@@ -44,13 +44,7 @@ public class InteractionResource {
 
 		try {
 			ArrayList<Interaction> all = inter.getAll();
-			Logger log = Logger.getLogger("AVKapp");
-			if (all != null) {
-				log.log(Level.WARNING, all.size() + " : " + all.toString());
-			}
-			else {
-				log.log(Level.WARNING, "Response is NULL");	
-			}
+			
 			response = Response.status(200).
 			entity(all).
 			build();

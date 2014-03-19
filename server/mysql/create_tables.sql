@@ -89,7 +89,9 @@ CREATE TABLE Users (
         Email       VARCHAR(40) NOT NULL,
         Login       VARCHAR(20) UNIQUE NOT NULL,
         Phone       VARCHAR(20) NOT NULL,
-        Password    VARCHAR(50) NOT NULL,
+        -- SHA256 génère des hash de 256 bits, soit 64 caractères.
+        Password    VARCHAR(64) NOT NULL,
+        PIN         VARCHAR(64) NOT NULL,
         Profile     INT(6) UNSIGNED NOT NULL,
         Office      INT(6) UNSIGNED NOT NULL,
         CONSTRAINT fkProfile FOREIGN KEY (Profile) REFERENCES Profile(Id),

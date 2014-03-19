@@ -1,9 +1,14 @@
 package com.avkapp;
 
 public class Interaction {
+	private int Id;
 	private String Medicament;
 	private int Effect;
 	private String Note;
+
+	public int getId() {
+		return this.Id;
+	}
 
 	public String getName() {
 		return this.Medicament;
@@ -17,7 +22,8 @@ public class Interaction {
 		return this.Note;
 	}
 
-	public Interaction(String med, int eff, String not) {
+	public Interaction(int id, String med, int eff, String not) {
+		this.Id = id;
 		this.Medicament = med;
 		this.Effect = eff;
 		this.Note = not;
@@ -25,9 +31,11 @@ public class Interaction {
 
 	@Override
 	public String toString() {
-		return "Interaction[name=" + Medicament + "," + 
-				   "effect=" + Effect + "," +
-				   "note=" + Note + "]";
+		return "Interaction[" + 
+							"id=" + Id + "," + 
+							"name=" + Medicament + "," + 
+				        	"effect=" + Effect + "," +
+				        	"note=" + Note + 
+				     	  "]";
 	}
-
 }
