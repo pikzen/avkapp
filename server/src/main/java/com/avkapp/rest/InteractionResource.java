@@ -15,16 +15,20 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-
 @Path("/interactions")
 public class InteractionResource {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createInteraction(Interaction inter) {
+	public Response createInteraction(String req) {
+		Logger log = Logger.getLogger("AVKApp");
+		log.log(Level.WARNING, req);
+
+
+
 		InteractionDAO iDao = new InteractionDAO();
 		Response response = null;
-
+		Interaction inter = new Interaction(1, "", 1, "");
 		try {
 			iDao.insert(inter);
 			response.status(200).build();

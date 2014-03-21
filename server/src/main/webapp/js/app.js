@@ -337,7 +337,7 @@ $(document).ready(function() {
 
 var app = angular.module('avkapp', ['ngRoute']);
 
-app.config(function($routeProvider, $sceDelegateProvider) {
+app.config(function($routeProvider) {
 	$routeProvider
 
 	.when('/', {
@@ -378,12 +378,20 @@ app.config(function($routeProvider, $sceDelegateProvider) {
 	})
 
 	.otherwise({redirectTo: '/'});
+});
 
-	$sceDelegateProvider.resourceUrlWhitelist([
-		'self',
-		'http://54.214.173.203:8080/*'
-		]);
+app.factory("UserService", [function() {
+	var user = {
+		isLogged: false,
+		username: '',
+		pin: ''
+	};
 
+	return user;
+}]);
+
+app.controller('globalController', function($scope) {
+	$scope.pageName = "Pls halp";
 });
 
 
@@ -484,9 +492,30 @@ app.controller('validateController', function($scope) {
 app.controller('userController', function($scope) {
 	$scope.pageName = "Utilisateur";
 });
-app.controller('loginController', function($scope) {
+app.controller('loginController', ['$scope', '$http', 'UserService', function($scope, $http, User) {
 	$scope.pageName = "Connexion";
-});
+
+	$scope.login = {};
+	$scope.login = function() {
+		$http.post("/avkapp/rest/login", $scope.login)
+		.success(function(data, status, headers) {
+			if (data.status == 200) {
+				User.isLogged = true;
+				User.username = data.username;
+				User.pin = data.sentpin;
+			}
+			else {
+				User.isLogged = false;
+				User.username = '';
+				User.pin = '';
+			}
+		}).error(function() {
+			User.isLogged = false;
+			User.username = '';
+			user.pin = '';
+		});
+	}
+}]);
 
 app.controller('historiqueController', function($scope) {
 	$scope.pageName = "Fiches Patient";

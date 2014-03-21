@@ -56,8 +56,8 @@ public class UserDAO {
 				log.log(Level.WARNING, e.getMessage());
 			}
 
-			stmt.setString(8, i.getProfile());
-			stmt.setString(9, i.getOffice());
+			stmt.setInt(8, i.getProfile());
+			stmt.setInt(9, i.getOffice());
 
 		
 			stmt.executeUpdate();
@@ -159,10 +159,8 @@ public class UserDAO {
 								      rs.getString(COL_PHONE),
 								      rs.getString(COL_PASSWORD),
 								      rs.getString(COL_PIN),
-								      /*rs.getInt(COL_PROFILE),
-								      rs.getInt(COL_OFFICE)*/
-								      	"1",
-								      	"1");
+								      rs.getInt(COL_PROFILE),
+								      rs.getInt(COL_OFFICE));
 			}
 		}
 		catch (SQLException e) {

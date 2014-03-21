@@ -51,7 +51,11 @@
           <artifactId>mysql-connector-java</artifactId>
           <version>5.1.29</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
@@ -69,11 +73,6 @@
             <artifactId>gf-embedded-api</artifactId>
             <version>1.0-alpha-4</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20140107</version>
         </dependency>
     </dependencies>
     <properties>

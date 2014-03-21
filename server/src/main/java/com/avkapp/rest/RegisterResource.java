@@ -53,10 +53,10 @@ public class RegisterResource {
 		if (i.getEmail().equals("")) {
 			hm.put("errorEmail", "Ce champ ne doit pas être vide");
 		}
-		if (i.getProfile().equals(-1)) {
+		if (i.getProfile() == -1) {
 			hm.put("errorProfile", "Veuillez sélectionner votre fonction.");
 		}
-		if (i.getOffice().equals(-1)) {
+		if (i.getOffice() == -1) {
 			hm.put("errorOffice", "Aucun cabinet sélectionné. Vous n'aurez accès à aucune donnée tant que vous n'appartenez pas à un cabinet.");
 		}
 		if (i.getPin().equals("")) {
