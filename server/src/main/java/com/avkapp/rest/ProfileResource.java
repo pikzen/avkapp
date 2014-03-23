@@ -4,6 +4,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import com.sun.jersey.api.json.JSONWithPadding;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
@@ -19,6 +20,31 @@ import java.util.logging.Level;
 @Path("/profiles")
 public class ProfileResource {
 	
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getProfileById(@PathParam("id") String id) {	
+		ProfileDAO inter = new ProfileDAO();
+		Response response = null;
+
+		try {
+			Profile profile = inter.getById(id);
+			if (profile != null) {
+				response = Response.status(200).entity(profile).build();
+			}
+			else {
+				response = Response.status(400).build();
+			}
+		}
+		catch (SQLException e) {
+			Logger log = Logger.getLogger("AVKappLogger");
+			log.log(java.util.logging.Level.WARNING, e.getMessage());
+			response = Response.status(500).build();
+		}
+
+		return response;
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createProfile(Profile inter) {

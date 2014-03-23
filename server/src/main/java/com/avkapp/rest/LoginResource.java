@@ -31,7 +31,8 @@ public class LoginResource {
 				response = Response.status(200).build();
 			}
 			else {
-				response = Response.status(400).build();
+				response = Response.status(400).entity("Informations de connexion erronées : " + log.toString()).build();
+				Logger.getLogger("AVKAPP").log(Level.WARNING, log.toString());
 			}
 		}
 		catch (SQLException e) {

@@ -38,6 +38,35 @@ public class OfficeDAO {
 			log.log(Level.WARNING, e.getMessage());
 		}
 	}
+	public Office getById(String id) throws SQLException {
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+		PreparedStatement stmt = null;
+		String query = "SELECT Id, Name, Address, PhoneNumber FROM Office WHERE Id = ?;";
+		Office result = null;
+
+		try {
+			stmt = conn.prepareStatement(query);		
+			stmt.setString(1, id);
+		
+			ResultSet rs =  stmt.executeQuery();
+		
+			if (rs.next()) {
+				result = new Office(rs.getInt(COL_ID),
+										  rs.getString(COL_NAME),
+								    	  rs.getString(COL_ADDRESS),
+								    	  rs.getString(COL_PHONE));
+			}
+		}
+		catch (SQLException e) {
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+		return result;	
+	}
 	public ArrayList<Office> getAll() throws SQLException {
 		Logger log = Logger.getLogger("AVKApp");
 

@@ -68,7 +68,7 @@ public class UserDAO {
 
 	public boolean emailExists(String email) throws SQLException {
 		PreparedStatement stmt = null;
-		String query = "SELECT * FROM Users WHERE Email=?";
+		String query = "SELECT * FROM Users WHERE Email=?;";
 
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
@@ -91,7 +91,7 @@ public class UserDAO {
 
 	public boolean loginExists(String login) throws SQLException {
 		PreparedStatement stmt = null;
-		String query = "SELECT * FROM Users WHERE Login=?";
+		String query = "SELECT * FROM Users WHERE Login=?;";
 
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
@@ -135,12 +135,11 @@ public class UserDAO {
 		Connection conn = db.getConnection();
 
 		PreparedStatement stmt = null;
-		String query = "SELECT Profile FROM Users WHERE Login = ? AND Password = ? AND PIN = ?;";
+		String query = "SELECT Profile FROM Users WHERE Login = ? AND Password = ?;";
 		try {
 			stmt = conn.prepareStatement(query);
-			stmt.setString(1, info.getLogin());
+			stmt.setString(1, info.getUsername());
 			stmt.setString(2, Encryption.SHA256(info.getPassword()));
-			stmt.setString(3, Encryption.SHA256(info.getPin()));
 
 			ResultSet rs = stmt.executeQuery();
 
@@ -188,7 +187,6 @@ public class UserDAO {
 					 	"WHERE Office.Id = Users.Office" + 
 					 	"AND Users.Login = ?" + 
 					 	"AND Users.Password = ?" +
-					 	"AND Users.PIN = ?" + 
 					 ");";
 		}
 		else {
@@ -197,17 +195,58 @@ public class UserDAO {
 
 		return null;
 	}
+
+	public User getByLoginInfo(LoginInfo log) throws SQLException {
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+		PreparedStatement stmt = null;
+		String query = "SELECT * FROM Users WHERE Login = ? AND Password = ?;";
+		User result = null;
+
+		try {
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, log.getUsername());
+			stmt.setString(2, Encryption.SHA256(log.getPassword()));
+
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				result = new User(rs.getInt(COL_ID),
+								  rs.getString(COL_FIRSTNAME),
+							      rs.getString(COL_LASTNAME),
+							      rs.getString(COL_EMAIL),
+							      rs.getString(COL_LOGIN),
+							      rs.getString(COL_PHONE),
+							      rs.getString(COL_PASSWORD),
+							      rs.getString(COL_PIN),
+							      rs.getInt(COL_PROFILE),
+							      rs.getInt(COL_OFFICE));
+			}
+		}
+		catch (SQLException e) {
+
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+
+		return result;
+	}
+
 	public boolean validate(LoginInfo log) throws SQLException {
 
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
 
 		PreparedStatement stmt = null;
-		String query = "SELECT * FROM Users WHERE Login = ? AND Password = ?";
+		String query = "SELECT * FROM Users WHERE Login = ? AND Password = ?;";
 
 		try {
 			stmt = conn.prepareStatement(query);
-			stmt.setString(1, log.getLogin());
+			stmt.setString(1, log.getUsername());
 			stmt.setString(2, Encryption.SHA256(log.getPassword()));
 
 			ResultSet rs = stmt.executeQuery();
@@ -228,7 +267,7 @@ public class UserDAO {
 	}
 
 	private boolean isAuthorizedToListUsers(LoginInfo info) throws SQLException {
-		if (info == null || info.getLogin() == null || info.getPassword() == null || info.getPin() == null) {
+		if (info == null || info.getUsername() == null || info.getPassword() == null) {
 			return false;
 		}
 
@@ -236,12 +275,11 @@ public class UserDAO {
 		Connection conn = db.getConnection();
 
 		PreparedStatement stmt = null;
-		String query = "SELECT Profile FROM Users WHERE Login = ? AND Password = ? AND PIN = ?;";
+		String query = "SELECT Profile FROM Users WHERE Login = ? AND Password = ?;";
 		try {
 			stmt = conn.prepareStatement(query);
-			stmt.setString(1, info.getLogin());
+			stmt.setString(1, info.getUsername());
 			stmt.setString(2, Encryption.SHA256(info.getPassword()));
-			stmt.setString(3, Encryption.SHA256(info.getPin()));
 
 			ResultSet rs = stmt.executeQuery();
 
@@ -264,6 +302,7 @@ public class UserDAO {
 
 		return false;
 	}
+
 
 	/**
 	* Returns the list of all users

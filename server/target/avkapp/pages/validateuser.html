@@ -27,4 +27,15 @@
 			<div class="short-resume"><h5>Mickaël Deleule</h5><i class="fa fa-angle-down"></i></div>
 		</div>
 	</div>
+
+<div class="gestion">
+	<a ng-href="{{(userConnected == 1) && '#/logout' || '#/login'}}">
+				<span ng-if="userConnected == true">Déconnexion</span>
+				<span ng-if="userConnected == false">Connexion</span>
+		</a>
+		<a ng-href="{{(userConnected == 1) && '#/user' || '#/inscription'}}">
+				<span ng-if="userConnected == true">Gestion</span>
+				<span ng-if="userConnected == false">Inscription</span>
+	</a>
+</div>
 </div>

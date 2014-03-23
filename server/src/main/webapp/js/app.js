@@ -336,8 +336,7 @@ $(document).ready(function() {
 
 
 var app = angular.module('avkapp', ['ngRoute']);
-
-app.factory('loginService', [function($http, $scope){
+app.factory('loginService', ['$http', function($http){
 	var User = {
 		isLogged: false,
 		username: '',
@@ -345,28 +344,42 @@ app.factory('loginService', [function($http, $scope){
 		password: ''
 	};
 
+	var UserInfo = {};
+
 	return {
-		login: function(username, password, pin) {
-			login = {};
-			login.login = username;
-			login.password = password;
-			login.pin = pin;
+		getAllUserData: function() {
+			if (User.isLogged) {
+				var loginInfo = {username: User.username, password: User.password};
 
-			$http.post("/avkapp/rest/login", login)
+				$http.post("/avkapp/rest/users/" + User.username, loginInfo)
+				.success(function(data) {
+					UserInfo.firstname = data.firstname;
+					UserInfo.lastname = data.lastname;
+					UserInfo.email = data.email;
+					UserInfo.phone = data.phone;
+				});
+			}
+		},
+		login: function(loginInfo, pin, callback) {
+			$http.post("/avkapp/rest/login", loginInfo)
 			.success(function(data) {
-				if (data.status == 200) {
-					User.isLogged = true;
-					User.username = username;
-					User.password = password;
-					User.pin = pin;
-				}
-				else {
-
-				}
+				User.isLogged = true;
+				User.username = loginInfo.username;
+				User.password = loginInfo.password;
+				User.pin = pin;
+				console.log("Connexion OK");
+				callback();
 			})
 			.error(function(data) {
-
+				console.log("Error ! Error !");
 			});
+		},
+		logout: function() {
+			User.isLogged = false;
+			User.username = '';
+			User.pin = '';
+			User.password = '';
+			$scope.$broadcast("event:sign-out");
 		},
 
 		isLogged: function() {
@@ -374,7 +387,28 @@ app.factory('loginService', [function($http, $scope){
 		},
 
 		getUserInfo: function() {
+			return UserInfo;
+		},
+		getUser: function() {
 			return User;
+		},
+		getProfileAsText: function(profileNum) {
+			var out = "";
+			$http.get("/avkapp/rest/profile/" + profileNum)
+			.success(function(data) {
+				out = data.profile;
+			})
+
+			return out;
+		},
+		getOfficeAsText: function(officeNum) {
+			var out = "";
+			$http.get("/avkapp/rest/office/" + officeNum)
+			.success(function(data) {
+				out = data.office;
+			})
+
+			return out;
 		}
 	}
 }]);
@@ -422,16 +456,21 @@ app.config(function($routeProvider) {
 		templateUrl: 'pages/registrationok.html',
 		controller: 'regokController'
 	})
+	.when("/loginok", {
+		templateUrl: 'pages/loginok.html',
+		controller: 'loginokController'
+	})
 
 	.otherwise({redirectTo: '/'});
 });
 
 
-app.controller('regokController', function($scope) {
+app.controller('regokController', ['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Pls halp";
-});
+	$scope.userConnected = Login.isLogged();
+}]);
 
-app.controller('aiderapideController', function($scope) {
+app.controller('aiderapideController',['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Aide Rapide";
 
 	$(".error").hide();
@@ -457,24 +496,25 @@ app.controller('aiderapideController', function($scope) {
 			$("#inr-value-error").hide();
 		}
 	});
-
-});
+$scope.userConnected = Login.isLogged();
+}]);
 
 /*
  * Controller for interactions
  * Requires : - $scope, for data injection
  *            - $http, for requests to the REST server
  */
-app.controller('interactionsController', function($scope, $http) {
+app.controller('interactionsController', ['$scope', '$http', 'loginService',function($scope, $http, Login) {
 	$scope.pageName = "Interactions Médicamenteuses";
 	$http({method:'GET', url:"/avkapp/rest/interactions"}).success(function(data) {
 		$scope.interactions = data;
 	}).error(function() {
 		console.log("Could not contact the REST Server");
 	});
-});
+	$scope.userConnected = Login.isLogged();
+}]);
 
-app.controller('inscriptionController', function($scope, $http, $location) {
+app.controller('inscriptionController',['$scope', '$http', '$location', 'loginService', function($scope, $http, $location, Login) {
 	$scope.pageName = "Inscription";
 	$scope.register = {};
 
@@ -492,35 +532,28 @@ app.controller('inscriptionController', function($scope, $http, $location) {
 		$scope.register.id = -1;
 		var errors = false;
 
-		if ($scope.register.lastname == "") {
+		if (!$scope.register.lastname.length) {
 			errors = true;
 		}
-		if ($scope.register.firstname == "") {
-			$scope.errorFirstname = "Veuillez remplir ce champ";
+		if (!$scope.register.firstname.length) {
 			errors = true;
 		}
-		if ($scope.register.login == "") {
-			$scope.errorLogin = "Veuillez remplir ce champ";
+		if (!$scope.register.login.length) {
 			errors = true;
 		}
-		if ($scope.register.password == "") {
-			$scope.errorPassword = "Veuillez remplir ce champ";
+		if (!$scope.register.password.length) {
 			errors = true;
 		}
-		if ($scope.register.email == "") {
-			$scope.errorEmail = "Veuillez remplir ce champ";
+		if (!$scope.register.email.length) {
 			errors = true;
 		}
-		if ($scope.register.phone == "") {
-			$scope.errorPhone = "Veuillez remplir ce champ";
+		if (!$scope.register.phone.length) {
 			errors = true;
 		}
-		if ($scope.register.profile == "") {
-			$scope.errorProfile = "Veuillez remplir ce champ";
+		if (!$scope.register.profile) {
 			errors = true;
 		}
-		if ($scope.register.pin == "") {
-			$scope.errorPin = "Veuillez remplir ce champ";
+		if (!$scope.register.pin.length) {
 			errors = true;
 		}
 
@@ -540,42 +573,67 @@ app.controller('inscriptionController', function($scope, $http, $location) {
 				console.log(data);
 			})
 			.error(function(data) {
-				$scope.response = data;
-				alert("Error !");
-				console.log(data);
+				$scope.status = "Le serveur est indisponible. Impossible de se connecter.";
 			});
 		}
 	}
-});
+	$scope.userConnected = Login.isLogged();
+}]);
 
-app.controller('adminController', function($scope, $http) {
+app.controller('adminController',['$scope', '$http', 'loginService', function($scope, $http, Login) {
 	$http.get("/avkapp/rest/users")
 		.success(function(data) {
 			$scope.users = data;
 		});
-});
-app.controller('addofficeController', function($scope) {
+		$scope.userConnected = Login.isLogged();
+}]);
+app.controller('addofficeController',['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Ajouter un cabinet";
-});
-app.controller('validateController', function($scope) {
+	$scope.userConnected = Login.isLogged();
+}]);
+app.controller('validateController',['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Validation d'utilisateurs";
-});
-app.controller('globalController', function($scope) {
+	$scope.userConnected = Login.isLogged();
+}]);
+app.controller('loginokController', ['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Validation d'utilisateurs";
-});
-app.controller('userController', function($scope) {
-	$scope.pageName = "Utilisateur";
-});
-app.controller('loginController', ['$scope', '$http', 'loginService', function($scope, $http, Login) {
+
+	var user = Login.getUserInfo();
+	$scope.fullname = user.firstname + " " + user.lastname;
+	$scope.userConnected = Login.isLogged();
+}]);
+app.controller('userController',['$scope', 'loginService', function($scope, Login) {
+	$scope.pageName = "Utilisateur";$scope.userConnected = Login.isLogged();
+}]);
+app.controller('loginController', ['$http', '$location', '$scope', 'loginService', function($http, $location, $scope, Login) {
 	$scope.pageName = "Connexion";
+	$scope.userConnected = Login.isLogged();
 
 	$scope.loginInfo = {};
 
-	$scope.login = function() {
-		Login.login(loginInfo);
+	$scope.signin = function() {
+		var body = {username: $scope.loginInfo.login, password: $scope.loginInfo.password};
+
+		Login.login(body, $scope.loginInfo.pin, function() {
+			if (Login.isLogged()) {
+				Login.getAllUserData();
+				$scope.userConnected = Login.isLogged();
+				$location.path("/loginok");
+			}
+			else {
+				$scope.userConnected = false;
+				$scope.error = "Connexion refusée.";
+			}	
+		});
+		
+	};
+
+	$scope.signout = function() {
+		Login.logout();
+		$scope.userConnected = true;
 	};
 }]);
 
-app.controller('historiqueController', function($scope) {
+app.controller('historiqueController',['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Fiches Patient";
-});
+}]);

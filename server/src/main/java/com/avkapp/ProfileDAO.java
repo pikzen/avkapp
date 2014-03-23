@@ -33,6 +33,32 @@ public class ProfileDAO {
 			log.log(Level.WARNING, e.getMessage());
 		}
 	}
+	public Profile getById(String id) throws SQLException {
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+		PreparedStatement stmt = null;
+		String query = "SELECT Id, Name FROM Profile WHERE Id = ?;";
+		Profile result = null;
+
+		try {
+			stmt = conn.prepareStatement(query);		
+			stmt.setString(1, id);
+		
+			ResultSet rs =  stmt.executeQuery();
+		
+			if (rs.next()) {
+				result = new Profile(rs.getInt(COL_ID), rs.getString(COL_NAME));
+			}
+		}
+		catch (SQLException e) {
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+		return result;	
+	}
 	public ArrayList<Profile> getAll() throws SQLException {
 		Logger log = Logger.getLogger("AVKApp");
 

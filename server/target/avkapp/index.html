@@ -12,24 +12,13 @@
 	<link href="stylesheets/font-awesome.min.css" rel="stylesheet">
 
 </head>
-<body ng-controller="globalController">
+<body>
 	<nav class="top-bar" data-topbar>
 		<div class="site-logo">
 			<i class="fa fa-bars toggle-sidebar"></i>
 			<span class="site-logo-text">AVK'App</span>
 		</div>
-		<a ng-href="{{(userConnected == 1) && '#/user' || '#/inscription'}}">
-			<div class="user-connect">
-				<span ng-if="userConnected">{{user.fullName}}</span>
-				<span ng-if="!userConnected">Inscription</span>
-			</div>
-		</a>
-		<a ng-href="{{(userConnected == 1) && '#/logout' || '#/login'}}">
-			<div class="user-login">
-				<span ng-if="userConnected">Déconnexion</span>
-				<span ng-if="!userConnected">Connexion</span>
-			</div>
-		</a>
+
 
 	</nav>
 
@@ -52,6 +41,7 @@
 	<script src="js/angular.js"></script>
 	<script src="js/angular-route.js"></script>
 	<script src="js/angular-resource.min.js"></script>
+	<script src="js/angular-authentificaion.js"></script>
 	<script src="bower_components/foundation/js/foundation.min.js"></script>
 	<script src="js/app.js"></script>
 </body>
