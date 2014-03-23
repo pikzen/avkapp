@@ -1,4 +1,5 @@
 package com.avkapp;
+
 import com.avkapp.DatabaseHelper;
 import com.avkapp.User;
 import java.util.ArrayList;
@@ -43,14 +44,8 @@ public class UserDAO {
 
 			try {
 				// Le mot de passe & le PIN sont stockés sous la forme d'un hash.
-				MessageDigest md = MessageDigest.getInstance("SHA-256");
-				md.update(i.getPassword().getBytes("UTF-8"));
-				String password = new String(md.digest());
-				stmt.setString(6, password);
-
-				md.update(i.getPin().getBytes("UTF-8"));
-				String pin = new String(md.digest());
-				stmt.setString(7, pin);
+				stmt.setString(6, Encryption.SHA256(i.getPassword()));
+				stmt.setString(7, Encryption.SHA256(i.getPin()));
 			}
 			catch (Exception e) { // TODO : pokemon catching
 				log.log(Level.WARNING, e.getMessage());
@@ -69,6 +64,29 @@ public class UserDAO {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
+	}
+
+	public boolean emailExists(String email) throws SQLException {
+		PreparedStatement stmt = null;
+		String query = "SELECT * FROM Users WHERE Email=?";
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+		try {
+			stmt = conn.prepareStatement(query);		
+			stmt.setString(1, email);		
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) return true;
+		}
+		catch (SQLException e) {
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+
+		return false;
 	}
 
 	public boolean loginExists(String login) throws SQLException {
@@ -93,7 +111,166 @@ public class UserDAO {
 
 		return false;
 	}
-	public ArrayList<User> getAll() throws SQLException {
+	/**
+	* Returns the list of users not yet validated by the administrator
+	* @param info The user information (login, password, pin)
+	* @return The list of users that his user can validate, or null if he isn't authorized
+	*/
+	public ArrayList<User> getUnvalidatedUsers(LoginInfo info) throws SQLException {
+		// Check if the user is authorized to list it
+		if (isAuthorizedToListUsers(info)) {
+			ArrayList<User> users = getAll(info);
+
+			return users;
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	private int getRole(LoginInfo info) throws SQLException {
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+		PreparedStatement stmt = null;
+		String query = "SELECT Profile FROM Users WHERE Login = ? AND Password = ? AND PIN = ?;";
+		try {
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, info.getLogin());
+			stmt.setString(2, Encryption.SHA256(info.getPassword()));
+			stmt.setString(3, Encryption.SHA256(info.getPin()));
+
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt(COL_PROFILE);
+			}
+		}
+		catch (SQLException e) {
+
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+
+		return -1;
+	}
+
+	/**
+	* Returns the list of users that this person can list
+	* Administrator can list everyone, Responsable can list those who are in his office
+	* @param info The user information
+	* @return The list of users, or null if the user is not allowed to list
+	*/
+	private ArrayList<User> listableUsers(LoginInfo info) throws SQLException {
+		PreparedStatement stmt = null;
+		int userRole = getRole(info);
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+		String query = "";
+
+		if (userRole == -1) {
+			return null;
+		}
+		else if (userRole == Profile.ROLE_ADMIN) {
+			// MySQL utilise un TINYINT pour représenter un BOOLEAN. 0 = false, x = true
+			query = "SELECT * FROM Users WHERE Users.Validated = 0;";
+		}
+		else if (userRole == Profile.ROLE_RESPONSABLE) {
+			query = "SELECT * FROM Users" + 
+					 "WHERE Users.Validated = 0" + 
+					 "AND Users.Office IN (" + 
+					 	"SELECT Office.Id FROM Office, Users" + 
+					 	"WHERE Office.Id = Users.Office" + 
+					 	"AND Users.Login = ?" + 
+					 	"AND Users.Password = ?" +
+					 	"AND Users.PIN = ?" + 
+					 ");";
+		}
+		else {
+			return null;
+		}
+
+		return null;
+	}
+	public boolean validate(LoginInfo log) throws SQLException {
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+		PreparedStatement stmt = null;
+		String query = "SELECT * FROM Users WHERE Login = ? AND Password = ?";
+
+		try {
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, log.getLogin());
+			stmt.setString(2, Encryption.SHA256(log.getPassword()));
+
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return true;
+			}
+		}
+		catch (SQLException e) {
+
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+
+		return false;
+	}
+
+	private boolean isAuthorizedToListUsers(LoginInfo info) throws SQLException {
+		if (info == null || info.getLogin() == null || info.getPassword() == null || info.getPin() == null) {
+			return false;
+		}
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+		PreparedStatement stmt = null;
+		String query = "SELECT Profile FROM Users WHERE Login = ? AND Password = ? AND PIN = ?;";
+		try {
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, info.getLogin());
+			stmt.setString(2, Encryption.SHA256(info.getPassword()));
+			stmt.setString(3, Encryption.SHA256(info.getPin()));
+
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				int profile = rs.getInt(COL_PROFILE);
+
+				if (profile == Profile.ROLE_ADMIN ||
+					profile == Profile.ROLE_RESPONSABLE) {
+					return true;
+				}
+			}
+		}
+		catch (SQLException e) {
+
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+
+		return false;
+	}
+
+	/**
+	* Returns the list of all users
+	* @param info The asking user information (login, password, pin)
+	* @return The list of all users, or null if he isn't authorized
+	*/
+	public ArrayList<User> getAll(LoginInfo info) throws SQLException {
 		Logger log = Logger.getLogger("AVKApp");
 
 		DatabaseHelper db = new DatabaseHelper();

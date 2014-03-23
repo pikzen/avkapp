@@ -27,10 +27,10 @@ public class ProfileResource {
 
 		try {
 			iDao.insert(inter);
-			response.status(200).build();
+			response = Response.status(200).build();
 		}
 		catch (SQLException e) {
-			response.status(500).build();
+			response = Response.status(500).build();
 		}
 
 		return response;

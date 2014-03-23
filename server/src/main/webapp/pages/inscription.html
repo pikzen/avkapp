@@ -10,7 +10,7 @@
 				</div>
 				<div class="large-10 columns">
 					<input type="text" placeholder="Nom" ng-model="register.lastname"></input>
-					<span ng-if="errorLastname">{{errorlastname}}</span>
+					<span class="error"  ng-show="!register.lastname.length">Veuillez remplir ce champ</span>
 				</div>
 			</div>
 
@@ -21,7 +21,7 @@
 				</div>
 				<div class="large-10 columns">
 					<input type="text" placeholder="Prénom" ng-model="register.firstname"></input>
-					<span ng-if="errorFirstname">{{errorFirstname}}</span>
+					<span class="error"  ng-show="!register.firstname.length">Veuillez remplir ce champ</span>
 				</div>
 			</div>
 
@@ -32,7 +32,8 @@
 				</div>
 				<div class="large-10 columns">
 					<input type="text" placeholder="Login" ng-model="register.login"></input>
-					<span ng-if="errorLogin">{{errorLogin}}</span>
+					<span class="error"  ng-show="errorLogin.length">{{errorLogin}}</span>
+					<span class="error"  ng-show="!register.login.length">Veuillez remplir ce champ</span>
 				</div>
 			</div>
 
@@ -43,7 +44,7 @@
 				</div>
 				<div class="large-10 columns">
 					<input type="password" placeholder="Mot de passe" ng-model="register.password"></input>
-					<span ng-if="errorPassword">{{errorPassword}}</span>
+					<span class="error"  ng-show="!register.password.length">Veuillez remplir ce champ</span>
 				</div>
 			</div>
 
@@ -54,7 +55,8 @@
 				</div>
 				<div class="large-10 columns">
 					<input type="text" placeholder="Adresse mail" ng-model="register.email"></input>
-					<span ng-if="errorEmail">{{errorEmail}}</span>
+					<span class="error"  ng-show="errorEmail.length">{{errorEmail}}</span>
+					<span class="error"  ng-show="!register.email.length">Veuillez remplir ce champ</span>
 				</div>
 			</div>
 
@@ -65,7 +67,7 @@
 				</div>
 				<div class="large-10 columns">
 					<input type="text" placeholder="Téléphone" ng-model="register.phone"></input>
-					<span ng-if="errorPhone">{{errorPhone}}</span>
+					<span class="error"  ng-show="!register.phone.length">Veuillez remplir ce champ</span>
 				</div>
 			</div>
 
@@ -78,7 +80,7 @@
 					<select ng-model="register.profile">
 						<option ng-repeat="role in roles" value="{{role.id}}">{{role.name}}</option>
 					</select>
-					<span ng-if="errorProfile">{{errorProfile}}</span>
+					<span class="error"  ng-show="!register.profile.length">Veuillez remplir ce champ</span>
 				</div>
 			</div>
 
@@ -91,7 +93,6 @@
 					<select ng-model="register.office">
 						<option ng-repeat="cab in cabinets" value="{{cab.id}}">{{cab.name}}</option>
 					</select>
-					<span ng-if="errorOffice">{{errorOffice}}</span>
 				</div>
 			</div>
 
@@ -102,7 +103,7 @@
 				</div>
 				<div class="large-10 columns">
 					<input class="columns" type="password" placeholder="PIN" ng-model="register.pin"></input>
-					<span ng-if="errorPin">{{errorPin}}</span>
+					<span class="error"  ng-show="!register.pin.length">Veuillez remplir ce champ</span>
 				</div>
 			</div>
 
@@ -119,5 +120,8 @@
 	</pre>
 	<pre>
 		{{status}}
+	</pre>
+	<pre>
+		{{response}}
 	</pre>
 </div>

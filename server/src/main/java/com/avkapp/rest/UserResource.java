@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.avkapp.User;
 import com.avkapp.UserDAO;
+import com.avkapp.LoginInfo;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.util.ArrayList;
@@ -27,10 +28,10 @@ public class UserResource {
 
 		try {
 			iDao.insert(inter);
-			response.status(200).build();
+			response = Response.status(200).build();
 		}
 		catch (SQLException e) {
-			response.status(500).build();
+			response = Response.status(500).build();
 		}
 
 		return response;
@@ -43,15 +44,13 @@ public class UserResource {
 		Response response = null;
 
 		try {
-			ArrayList<User> all = inter.getAll();
+			ArrayList<User> all = inter.getAll(new LoginInfo());
 			Logger log = Logger.getLogger("AVKapp");
 			if (all != null) {
 			}
 			else {
 			}
-			response = Response.status(200).
-			entity(all).
-			build();
+			response = Response.status(200).entity(all).build();
 		}
 		catch (SQLException e) {
 			Logger log = Logger.getLogger("AVKappLogger");

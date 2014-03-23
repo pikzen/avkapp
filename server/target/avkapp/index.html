@@ -18,9 +18,6 @@
 			<i class="fa fa-bars toggle-sidebar"></i>
 			<span class="site-logo-text">AVK'App</span>
 		</div>
-		<div class="current-page-wrapper">
-			<span class="current-page">Page : {{pageName}}</span>
-		</div>
 		<a ng-href="{{(userConnected == 1) && '#/user' || '#/inscription'}}">
 			<div class="user-connect">
 				<span ng-if="userConnected">{{user.fullName}}</span>

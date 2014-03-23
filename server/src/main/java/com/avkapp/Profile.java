@@ -4,6 +4,12 @@ public class Profile {
 	private int Id;
 	private String Name;
 
+	public static int ROLE_ADMIN = 1;
+	public static int ROLE_RESPONSABLE = 2;
+	public static int ROLE_MEDECIN = 3;
+	public static int ROLE_INFIRMIER = 4;
+	// Fill up if there are more roles
+
 
 	public int getId() {
 		return this.Id;

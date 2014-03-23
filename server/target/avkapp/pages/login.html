@@ -1,6 +1,7 @@
 <div class="row inscription">
 	<h1 class="page-name">Connexion</h1>
 
+	<form ng-submit="login()">
 	<div class="large-12 columns register-info">
 		<!-- Login -->
 		<div class="row reginfo-login">
@@ -8,7 +9,7 @@
 				<label class="right inline">Login</label>
 			</div>
 			<div class="large-10 columns">
-				<input type="text" placeholder="Login"></input>
+				<input type="text" placeholder="Login" ng-model="loginInfo.login"></input>
 			</div>
 		</div>
 
@@ -18,7 +19,7 @@
 				<label class="right inline">Mot de passe</label>
 			</div>
 			<div class="large-10 columns">
-				<input type="password" placeholder="Mot de passe"></input>
+				<input type="password" placeholder="Mot de passe" ng-model="loginInfo.password"></input>
 			</div>
 		</div>
 
@@ -28,14 +29,15 @@
 				<label class="right inline">PIN</label>
 			</div>
 			<div class="large-10 columns">
-				<input class="columns" type="password" placeholder="PIN"></input>
+				<input class="columns" type="password" placeholder="PIN" ng-model="loginInfo.pin"></input>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="large-12 columns">
-				<div class="button" id="inr-validate">Valider</a></div>
+				<button class="button" id="inr-validate" type="submit">Valider</a></div>
 			</div>
 		</div>
 	</div>
+	</form>
 </div>

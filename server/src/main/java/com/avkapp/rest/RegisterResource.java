@@ -29,55 +29,38 @@ public class RegisterResource {
 
 		UserDAO iDao = new UserDAO();
 		Response response = null;
-
-		if (i.getFirstname().equals("")) {
-			hm.put("errorFirstname", "Le champ ne doit pas être vide.");
-		}
-		if (i.getLastname().equals("")) {
-			hm.put("errorLastname", "Le champ ne doit pas être vide.");
-		}
-		if (i.getLogin().equals("")) {
-			hm.put("errorLogin", "Le champ ne doit pas être vide.");
-		}
 		try {
 			if (iDao.loginExists(i.getLogin())) {
 				hm.put("errorLogin", "Ce nom d'utilisateur existe déjà.");
+				errors = true;
+			}
+			if (iDao.emailExists(i.getEmail())) {
+				hm.put("errorEmail", "Cet email existe déjà");
+				errors = true;
 			}
 		}
 		catch(SQLException e) {
 			hm.put("globalError", "Le serveur à renvoyé une erreur.");
+			errors = true;
 		}
-		if (i.getPassword().equals("")) {
-			hm.put("errorPassword", "Ce champ ne doit pas être vide.");
-		}
-		if (i.getEmail().equals("")) {
-			hm.put("errorEmail", "Ce champ ne doit pas être vide");
-		}
-		if (i.getProfile() == -1) {
-			hm.put("errorProfile", "Veuillez sélectionner votre fonction.");
-		}
-		if (i.getOffice() == -1) {
-			hm.put("errorOffice", "Aucun cabinet sélectionné. Vous n'aurez accès à aucune donnée tant que vous n'appartenez pas à un cabinet.");
-		}
-		if (i.getPin().equals("")) {
-			hm.put("errorPin", "Ce champ ne doit pas être vide.");
+		if (!errors) {
+			hm.put("success", "1");
 		}
 
 		org.json.JSONObject errorlist = new org.json.JSONObject(hm);
 
 
 		if (!errors) {
-
 			try {
 				iDao.insert(i);
-				response.status(200).build();
+				response = Response.status(200).entity(errorlist.toString()).build();
 			}
 			catch (SQLException e) {
 				response.status(500).build();
 			}
 		}
 		else {
-			response.status(400).entity(errorlist.toString()).build();
+			response = Response.status(400).entity(errorlist.toString()).build();
 		}
 
 		return response;

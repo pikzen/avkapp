@@ -337,6 +337,48 @@ $(document).ready(function() {
 
 var app = angular.module('avkapp', ['ngRoute']);
 
+app.factory('loginService', [function($http, $scope){
+	var User = {
+		isLogged: false,
+		username: '',
+		pin: '',
+		password: ''
+	};
+
+	return {
+		login: function(username, password, pin) {
+			login = {};
+			login.login = username;
+			login.password = password;
+			login.pin = pin;
+
+			$http.post("/avkapp/rest/login", login)
+			.success(function(data) {
+				if (data.status == 200) {
+					User.isLogged = true;
+					User.username = username;
+					User.password = password;
+					User.pin = pin;
+				}
+				else {
+
+				}
+			})
+			.error(function(data) {
+
+			});
+		},
+
+		isLogged: function() {
+			return User.isLogged;
+		},
+
+		getUserInfo: function() {
+			return User;
+		}
+	}
+}]);
+
 app.config(function($routeProvider) {
 	$routeProvider
 
@@ -376,24 +418,18 @@ app.config(function($routeProvider) {
 		templateUrl: 'pages/admin.html',
 		controller: 'adminController'
 	})
+	.when("/registrationok", {
+		templateUrl: 'pages/registrationok.html',
+		controller: 'regokController'
+	})
 
 	.otherwise({redirectTo: '/'});
 });
 
-app.factory("UserService", [function() {
-	var user = {
-		isLogged: false,
-		username: '',
-		pin: ''
-	};
 
-	return user;
-}]);
-
-app.controller('globalController', function($scope) {
+app.controller('regokController', function($scope) {
 	$scope.pageName = "Pls halp";
 });
-
 
 app.controller('aiderapideController', function($scope) {
 	$scope.pageName = "Aide Rapide";
@@ -438,7 +474,7 @@ app.controller('interactionsController', function($scope, $http) {
 	});
 });
 
-app.controller('inscriptionController', function($scope, $http) {
+app.controller('inscriptionController', function($scope, $http, $location) {
 	$scope.pageName = "Inscription";
 	$scope.register = {};
 
@@ -453,27 +489,62 @@ app.controller('inscriptionController', function($scope, $http) {
 		});
 
 	$scope.processForm = function() {
-		$http.post('/avkapp/rest/inscription', $scope.register)
-			.success(function(data) {
-				if (!data.success) {
-					$scope.errorFirstname = data.error.firstname;
-					$scope.errorLastname = data.error.lastname;
-					$scope.errorLogin = data.error.login;
-					$scope.errorPw = data.error.password;
-					$scope.errorEmail = data.error.password;
-					$scope.errorPhone = data.error.phone;
-					$scope.errorProfile = data.error.profile;
-					$scope.errorOffice = data.error.office;
-					$scope.errorPin = data.error.pin;
-				}
+		$scope.register.id = -1;
+		var errors = false;
+
+		if ($scope.register.lastname == "") {
+			errors = true;
+		}
+		if ($scope.register.firstname == "") {
+			$scope.errorFirstname = "Veuillez remplir ce champ";
+			errors = true;
+		}
+		if ($scope.register.login == "") {
+			$scope.errorLogin = "Veuillez remplir ce champ";
+			errors = true;
+		}
+		if ($scope.register.password == "") {
+			$scope.errorPassword = "Veuillez remplir ce champ";
+			errors = true;
+		}
+		if ($scope.register.email == "") {
+			$scope.errorEmail = "Veuillez remplir ce champ";
+			errors = true;
+		}
+		if ($scope.register.phone == "") {
+			$scope.errorPhone = "Veuillez remplir ce champ";
+			errors = true;
+		}
+		if ($scope.register.profile == "") {
+			$scope.errorProfile = "Veuillez remplir ce champ";
+			errors = true;
+		}
+		if ($scope.register.pin == "") {
+			$scope.errorPin = "Veuillez remplir ce champ";
+			errors = true;
+		}
+
+		if (!errors) {
+			$http.post('/avkapp/rest/inscription', $scope.register)
+				.success(function(data) {
+					if (data.status == 400) {
+						$scope.errorEmail = data.errorEmail;
+						$scope.errorLogin = data.errorLogin;	
+					}
 				else {
-					$status = "Registration OK";
+					$scope.status = "Registration OK";
+					$location.path("/registrationok");
 				}
 
+				$scope.response = data;
+				console.log(data);
 			})
 			.error(function(data) {
-
+				$scope.response = data;
+				alert("Error !");
+				console.log(data);
 			});
+		}
 	}
 });
 
@@ -489,32 +560,20 @@ app.controller('addofficeController', function($scope) {
 app.controller('validateController', function($scope) {
 	$scope.pageName = "Validation d'utilisateurs";
 });
+app.controller('globalController', function($scope) {
+	$scope.pageName = "Validation d'utilisateurs";
+});
 app.controller('userController', function($scope) {
 	$scope.pageName = "Utilisateur";
 });
-app.controller('loginController', ['$scope', '$http', 'UserService', function($scope, $http, User) {
+app.controller('loginController', ['$scope', '$http', 'loginService', function($scope, $http, Login) {
 	$scope.pageName = "Connexion";
 
-	$scope.login = {};
+	$scope.loginInfo = {};
+
 	$scope.login = function() {
-		$http.post("/avkapp/rest/login", $scope.login)
-		.success(function(data, status, headers) {
-			if (data.status == 200) {
-				User.isLogged = true;
-				User.username = data.username;
-				User.pin = data.sentpin;
-			}
-			else {
-				User.isLogged = false;
-				User.username = '';
-				User.pin = '';
-			}
-		}).error(function() {
-			User.isLogged = false;
-			User.username = '';
-			user.pin = '';
-		});
-	}
+		Login.login(loginInfo);
+	};
 }]);
 
 app.controller('historiqueController', function($scope) {

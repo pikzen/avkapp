@@ -8127,23 +8127,35 @@ th.hide-for-touch {
 }
 
 /* line 28, ../scss/app.scss */
+span.error {
+  color: red;
+  font-size: 8pt;
+  line-height: 20pt;
+}
+
+/* line 34, ../scss/app.scss */
+input[type=text] {
+  margin-bottom: 0;
+}
+
+/* line 38, ../scss/app.scss */
 .top-bar {
   padding-left: 20px;
 }
-/* line 31, ../scss/app.scss */
+/* line 41, ../scss/app.scss */
 .top-bar div {
   display: inline-block;
   float: left;
 }
-/* line 36, ../scss/app.scss */
+/* line 46, ../scss/app.scss */
 .top-bar .site-logo {
   width: 200px;
 }
-/* line 40, ../scss/app.scss */
+/* line 50, ../scss/app.scss */
 .top-bar .current-page-wrapper {
   height: 80px;
 }
-/* line 44, ../scss/app.scss */
+/* line 54, ../scss/app.scss */
 .top-bar .user-connect, .top-bar .user-login {
   width: 100px;
   display: inline-block;
@@ -8156,57 +8168,57 @@ th.hide-for-touch {
   font-weight: bold;
   line-height: 80px;
 }
-/* line 58, ../scss/app.scss */
+/* line 68, ../scss/app.scss */
 .top-bar .user-connect:hover, .top-bar .user-login:hover {
   background-color: #1d7f46;
 }
 
-/* line 63, ../scss/app.scss */
+/* line 73, ../scss/app.scss */
 .nav-open {
   left: 0;
 }
 
-/* line 68, ../scss/app.scss */
+/* line 78, ../scss/app.scss */
 .nav-closed {
   left: -240px;
 }
 
-/* line 72, ../scss/app.scss */
+/* line 82, ../scss/app.scss */
 .page-name {
   text-align: center;
 }
 
-/* line 75, ../scss/app.scss */
+/* line 85, ../scss/app.scss */
 .content {
   float: left;
   width: 75%;
   margin-bottom: 50px;
   transition: margin-left 0.2s linear;
 }
-/* line 81, ../scss/app.scss */
+/* line 91, ../scss/app.scss */
 .content.expand {
   margin-left: -120px;
 }
-/* line 84, ../scss/app.scss */
+/* line 94, ../scss/app.scss */
 .content.cordova-app {
   float: none;
   margin: 0 auto;
 }
-/* line 88, ../scss/app.scss */
+/* line 98, ../scss/app.scss */
 .content.cordova-app ul li {
   display: inline;
 }
-/* line 91, ../scss/app.scss */
+/* line 101, ../scss/app.scss */
 .content.cordova-app ul li.inter-name {
   width: 100%;
   display: block;
 }
-/* line 95, ../scss/app.scss */
+/* line 105, ../scss/app.scss */
 .content.cordova-app ul i {
   padding-right: 30px;
 }
 
-/* line 102, ../scss/app.scss */
+/* line 112, ../scss/app.scss */
 .navigation {
   z-index: 1;
   position: relative;
@@ -8221,7 +8233,7 @@ th.hide-for-touch {
   border: 1px solid #2b3d52;
   transition: left 0.2s linear;
 }
-/* line 116, ../scss/app.scss */
+/* line 126, ../scss/app.scss */
 .navigation a {
   height: 50px;
   display: block;
@@ -8230,158 +8242,158 @@ th.hide-for-touch {
   color: white;
   border-bottom: 1px solid #2b3d52;
 }
-/* line 124, ../scss/app.scss */
+/* line 134, ../scss/app.scss */
 .navigation a.selected {
   background-color: #2b3d52;
 }
-/* line 127, ../scss/app.scss */
+/* line 137, ../scss/app.scss */
 .navigation a span {
   width: 80%;
   display: inline-block;
 }
-/* line 131, ../scss/app.scss */
+/* line 141, ../scss/app.scss */
 .navigation a i {
   width: 20%;
   text-align: center;
   height: 100%;
   line-height: 50px;
 }
-/* line 136, ../scss/app.scss */
+/* line 146, ../scss/app.scss */
 .navigation a i.large {
   font-size: 28px;
 }
-/* line 140, ../scss/app.scss */
+/* line 150, ../scss/app.scss */
 .navigation a:hover {
   background-color: #2d3c50;
 }
 
-/* line 155, ../scss/app.scss */
+/* line 165, ../scss/app.scss */
 .cordova-app.top-bar, .cordova-app.navigation {
   display: none;
 }
-/* line 159, ../scss/app.scss */
+/* line 169, ../scss/app.scss */
 .cordova-app.content {
   margin: 0 auto;
 }
 
-/* line 173, ../scss/app.scss */
+/* line 183, ../scss/app.scss */
 .patient-cat, .hemorragie {
   display: none;
 }
 
-/* line 177, ../scss/app.scss */
+/* line 187, ../scss/app.scss */
 .hemorragie {
   line-height: 40px;
 }
 
-/* line 181, ../scss/app.scss */
+/* line 191, ../scss/app.scss */
 #inr-validate {
   display: block;
 }
 
-/* line 202, ../scss/app.scss */
+/* line 212, ../scss/app.scss */
 .interaction i {
   padding-right: 20px;
 }
 
-/* line 207, ../scss/app.scss */
+/* line 217, ../scss/app.scss */
 .top-bar {
   height: 80px;
   z-index: 3;
   background-color: #2dc86e;
 }
-/* line 212, ../scss/app.scss */
+/* line 222, ../scss/app.scss */
 .top-bar .toggle-sidebar {
   padding-right: 30px;
   color: white;
   font-size: 40px;
   cursor: pointer;
 }
-/* line 218, ../scss/app.scss */
+/* line 228, ../scss/app.scss */
 .top-bar .site-logo {
   font-family: 'Bebas Neue';
   font-size: 46px;
   line-height: 80px;
 }
 
-/* line 225, ../scss/app.scss */
+/* line 235, ../scss/app.scss */
 .main-content {
   width: 100%;
 }
 
-/* line 229, ../scss/app.scss */
+/* line 239, ../scss/app.scss */
 ul.interactions-list {
   list-style-type: none;
   border: 1px solid #ccc;
   width: 100%;
   margin-left: 0;
 }
-/* line 235, ../scss/app.scss */
+/* line 245, ../scss/app.scss */
 ul.interactions-list li {
   border-bottom: 1px solid #ccc;
   width: 100%;
   display: inline-block;
   padding: 5px;
 }
-/* line 236, ../scss/app.scss */
+/* line 246, ../scss/app.scss */
 ul.interactions-list li.header {
   font-weight: bold;
 }
-/* line 243, ../scss/app.scss */
+/* line 253, ../scss/app.scss */
 ul.interactions-list li span {
   width: 30%;
   display: inline-block;
 }
-/* line 246, ../scss/app.scss */
+/* line 256, ../scss/app.scss */
 ul.interactions-list li span.inter-mod {
   width: 50px;
 }
-/* line 251, ../scss/app.scss */
+/* line 261, ../scss/app.scss */
 ul.interactions-list tr {
   border-bottom: 1px solid #ddd;
 }
 
-/* line 256, ../scss/app.scss */
+/* line 266, ../scss/app.scss */
 .important {
   font-weight: bold;
 }
 
-/* line 261, ../scss/app.scss */
+/* line 271, ../scss/app.scss */
 .hist-user-info h5 {
   text-align: center;
 }
 
-/* line 267, ../scss/app.scss */
+/* line 277, ../scss/app.scss */
 td.warning.important {
   background-color: #ff4040;
 }
-/* line 270, ../scss/app.scss */
+/* line 280, ../scss/app.scss */
 td.warning.light {
   background-color: #ff8080;
 }
 
-/* line 275, ../scss/app.scss */
+/* line 285, ../scss/app.scss */
 .inr-result {
   margin-top: 150px;
   text-align: center;
   border-top: 1px solid #888;
 }
 
-/* line 281, ../scss/app.scss */
+/* line 291, ../scss/app.scss */
 .hist-chart {
   text-align: center;
 }
 
-/* line 285, ../scss/app.scss */
+/* line 295, ../scss/app.scss */
 .button {
   background-color: #2dc86e;
 }
-/* line 287, ../scss/app.scss */
+/* line 297, ../scss/app.scss */
 .button:hover, .button:focus {
   background-color: #249e57;
 }
 
-/* line 292, ../scss/app.scss */
+/* line 302, ../scss/app.scss */
 footer {
   z-index: 3;
   height: 40px;
@@ -8395,64 +8407,64 @@ footer {
   padding-left: 20px;
   padding-right: 20px;
 }
-/* line 304, ../scss/app.scss */
+/* line 314, ../scss/app.scss */
 footer a {
   color: white;
 }
 
-/* line 310, ../scss/app.scss */
+/* line 320, ../scss/app.scss */
 .button.decline {
   background-color: red !important;
 }
-/* line 313, ../scss/app.scss */
+/* line 323, ../scss/app.scss */
 .button.decline:hover {
   background-color: dark-red !important;
 }
 
-/* line 319, ../scss/app.scss */
+/* line 329, ../scss/app.scss */
 .user {
   border: 1px solid #ccc;
   background-color: #fafafa;
   margin-bottom: 20px !important;
 }
-/* line 321, ../scss/app.scss */
+/* line 331, ../scss/app.scss */
 .user .short-resume h5 {
   display: inline;
 }
-/* line 324, ../scss/app.scss */
+/* line 334, ../scss/app.scss */
 .user .short-resume i {
   float: right;
   margin-right: 5px;
   margin-top: 5px;
 }
-/* line 330, ../scss/app.scss */
+/* line 340, ../scss/app.scss */
 .user span {
   display: block;
 }
 
 @media screen and (max-width: 1220px) {
-  /* line 339, ../scss/app.scss */
+  /* line 349, ../scss/app.scss */
   .navigation {
-    left: -240px;
-  }
-
-  /* line 342, ../scss/app.scss */
-  .content {
-    margin-left: -120px;
-  }
-}
-@media screen and (max-width: 1000px) {
-  /* line 348, ../scss/app.scss */
-  .navigation {
-    position: absolute;
     left: -240px;
   }
 
   /* line 352, ../scss/app.scss */
   .content {
+    margin-left: -120px;
+  }
+}
+@media screen and (max-width: 1000px) {
+  /* line 358, ../scss/app.scss */
+  .navigation {
+    position: absolute;
+    left: -240px;
+  }
+
+  /* line 362, ../scss/app.scss */
+  .content {
     margin-left: 100px;
   }
-  /* line 355, ../scss/app.scss */
+  /* line 365, ../scss/app.scss */
   .content.expand {
     margin-left: 100px;
   }

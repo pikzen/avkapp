@@ -7,7 +7,7 @@ CREATE TABLE Office (
 
 CREATE TABLE Profile (
         Id          INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        Name        VARCHAR(12) NOT NULL
+        Name        VARCHAR(40) NOT NULL
 ) ENGINE=INNODB;
 
 CREATE TABLE Medication (
@@ -25,7 +25,7 @@ CREATE TABLE Notes (
 
 CREATE TABLE INRMedication (
         Id          INT(1) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        Name        VARCHAR(40)
+        Name        VARCHAR(100)
 ) ENGINE=INNODB;
 
 CREATE TABLE INRTreatmentPhase (
@@ -94,8 +94,16 @@ CREATE TABLE Users (
         PIN         VARCHAR(64) NOT NULL,
         Profile     INT(6) UNSIGNED NOT NULL,
         Office      INT(6) UNSIGNED NOT NULL,
+        Validated   BOOLEAN NOT NULL,
         CONSTRAINT fkProfile FOREIGN KEY (Profile) REFERENCES Profile(Id),
         CONSTRAINT fkOffice FOREIGN KEY (Office) REFERENCES Office(Id)
+) ENGINE=INNODB;
+
+CREATE TABLE OfficeResponsable (
+        UserId      INT(6) UNSIGNED,
+        OfficeId    INT(6) UNSIGNED,
+        CONSTRAINT fkUserId FOREIGN KEY (UserId) REFERENCES Users(Id),
+        CONSTRAINT fkOfficeId FOREIGN KEY (OfficeId) REFERENCES Office(Id)
 ) ENGINE=INNODB;
 
 CREATE TABLE UserPatients (
@@ -126,5 +134,6 @@ CREATE TABLE INRTreatmentDuration (
         CONSTRAINT fkTreatment1 FOREIGN KEY (Treatment) REFERENCES INRTreatment(Id),
         CONSTRAINT fkPhase2 FOREIGN KEY (Phase) REFERENCES INRTreatmentPhase(Id)
 ) ENGINE=INNODB;
+
 
 
