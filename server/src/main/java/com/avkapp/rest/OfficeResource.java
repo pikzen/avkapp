@@ -8,8 +8,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import com.avkapp.Office;
-import com.avkapp.OfficeDAO;
+import com.avkapp.data.Office;
+import com.avkapp.dao.OfficeDAO;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class OfficeResource {
 			Office office = inter.getById(id);
 			Logger log = Logger.getLogger("AVKapp");
 			if (office != null) {
-				response = Response.status(200).entity(office).build();
+				response = Response.status(200).entity(office.getName()).build();
 			}
 			else {
 				response = Response.status(400).build();

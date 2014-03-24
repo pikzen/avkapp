@@ -9,9 +9,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import com.avkapp.User;
-import com.avkapp.UserDAO;
-import com.avkapp.LoginInfo;
+import com.avkapp.data.User;
+import com.avkapp.dao.UserDAO;
+import com.avkapp.data.LoginInfo;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class UserResource {
 	@POST
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getProfileById(@PathParam("id") String id, LoginInfo info) {	
+	public Response getUserById(@PathParam("id") String id, LoginInfo info) {	
 		UserDAO uDao = new UserDAO();
 		Response response = null;
 
@@ -40,23 +40,6 @@ public class UserResource {
 		catch (SQLException e) {
 			Logger log = Logger.getLogger("AVKappLogger");
 			log.log(java.util.logging.Level.WARNING, e.getMessage());
-			response = Response.status(500).build();
-		}
-
-		return response;
-	}
-
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createUser(User inter) {
-		UserDAO iDao = new UserDAO();
-		Response response = null;
-
-		try {
-			iDao.insert(inter);
-			response = Response.status(200).build();
-		}
-		catch (SQLException e) {
 			response = Response.status(500).build();
 		}
 

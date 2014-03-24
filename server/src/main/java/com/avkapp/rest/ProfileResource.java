@@ -9,8 +9,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import com.avkapp.Profile;
-import com.avkapp.ProfileDAO;
+import com.avkapp.data.Profile;
+import com.avkapp.dao.ProfileDAO;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class ProfileResource {
 		try {
 			Profile profile = inter.getById(id);
 			if (profile != null) {
-				response = Response.status(200).entity(profile).build();
+				response = Response.status(200).entity(profile.getName()).build();
 			}
 			else {
 				response = Response.status(400).build();

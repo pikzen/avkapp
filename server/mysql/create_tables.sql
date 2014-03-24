@@ -39,6 +39,8 @@ CREATE TABLE INRHistoryValue (
         INRValue    FLOAT(4,2) NOT NULL,
         Bleeding    BOOLEAN NOT NULL,
         Phase       INT(1) UNSIGNED NOT NULL,
+        Patient     INT(6) UNSIGNED NOT NULL,
+        CONSTRAINT fkPatient FOREIGN KEY (Patient) REFERENCES Patient(Id),
 	CONSTRAINT fkPhase FOREIGN KEY (Phase) REFERENCES INRTreatmentPhase(Id)
 ) ENGINE=INNODB;
 
@@ -63,14 +65,6 @@ CREATE TABLE Patient (
         Treatment   INT(6) UNSIGNED NOT NULL,
         SpecialINR  VARCHAR(20),
         CONSTRAINT fkTreatment FOREIGN KEY (Treatment) REFERENCES INRTreatment(Id)
-) ENGINE=INNODB;
-
-CREATE TABLE INRRecords (
-        Id          INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        Patient     INT(6) UNSIGNED NOT NULL,
-        INR         INT(10) UNSIGNED NOT NULL,
-        CONSTRAINT fkPatient FOREIGN KEY (Patient) REFERENCES Patient(Id),
-        CONSTRAINT fkINR FOREIGN KEY (INR) REFERENCES INRHistoryValue(Id)
 ) ENGINE=INNODB;
 
 
@@ -106,13 +100,22 @@ CREATE TABLE OfficeResponsable (
         CONSTRAINT fkOfficeId FOREIGN KEY (OfficeId) REFERENCES Office(Id)
 ) ENGINE=INNODB;
 
-CREATE TABLE UserPatients (
+CREATE TABLE OfficeSwitch (
+        UserId      INT(6) UNSIGNED,
+        OfficeId    INT(6) UNSIGNED,
+        CONSTRAINT fkUserIdOS FOREIGN KEY (UserId) REFERENCES Users(Id),
+        CONSTRAINT fkOfficeIdOS FOREIGN KEY (OfficeId) REFERENCES Office(Id)
+) ENGINE=INNODB;
+
+CREATE TABLE OfficePatients (
         Id          INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        UserId        INT(6) UNSIGNED NOT NULL,
+        OfficeId        INT(6) UNSIGNED NOT NULL,
         Patient     INT(6) UNSIGNED NOT NULL,
-        CONSTRAINT fkUser FOREIGN KEY (UserId) REFERENCES Users(Id),
+        CONSTRAINT fkUser FOREIGN KEY (UserId) REFERENCES Office(Id),
         CONSTRAINT fkPatient1 FOREIGN KEY (Patient) REFERENCES Patient(Id)
 ) ENGINE=INNODB;
+
+
 # Liaisons
 
 CREATE TABLE MedicationDuration (

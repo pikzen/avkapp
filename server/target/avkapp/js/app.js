@@ -346,9 +346,27 @@ app.factory('loginService', ['$http', function($http){
 
 	var UserInfo = {};
 
-	return {
-		getAllUserData: function() {
-			if (User.isLogged) {
+
+	function getOfficeAsText() {
+		if (User.isLogged) {
+			$http.get("/avkapp/rest/offices/" + UserInfo.office.id)
+			.success(function(data) {
+				return data;
+			});
+		}
+	}
+
+	function getProfileAsText() {
+		if (User.isLogged) {
+			$http.get("/avkapp/rest/profiles/" + UserInfo.role.id)
+			.success(function(data) {
+				return data;
+			});
+		}
+	}
+
+	function getAllData() {
+		if (User.isLogged) {
 				var loginInfo = {username: User.username, password: User.password};
 
 				$http.post("/avkapp/rest/users/" + User.username, loginInfo)
@@ -357,8 +375,29 @@ app.factory('loginService', ['$http', function($http){
 					UserInfo.lastname = data.lastname;
 					UserInfo.email = data.email;
 					UserInfo.phone = data.phone;
+					
+					UserInfo.role = {};
+					UserInfo.role.id = data.profile;
+					UserInfo.role.text = getProfileAsText()
+					
+					UserInfo.office = {};
+					UserInfo.office.id = data.office;
+					UserInfo.office.text = getOfficeAsText();
+
+					UserInfo.isAdmin = (data.profile == 1);
+					UserInfo.isResponsable = (data.profile == 2);
+					UserInfo.isMedecin = (data.profile == 3);
+					UserInfo.isInfirmier = (data.profile == 4);
+					UserInfo.isAutoMed = (data.profile == 5);
+
+					User.hasOffice = (data.office != 0 && data.office != 1);
 				});
-			}
+		}
+	}
+
+	return {
+		getAllUserData: function() {
+			return getAllData();
 		},
 		login: function(loginInfo, pin, callback) {
 			$http.post("/avkapp/rest/login", loginInfo)
@@ -368,18 +407,20 @@ app.factory('loginService', ['$http', function($http){
 				User.password = loginInfo.password;
 				User.pin = pin;
 				console.log("Connexion OK");
+				getAllData();
 				callback();
 			})
 			.error(function(data) {
 				console.log("Error ! Error !");
 			});
 		},
-		logout: function() {
+		logout: function(callback) {
 			User.isLogged = false;
 			User.username = '';
 			User.pin = '';
 			User.password = '';
-			$scope.$broadcast("event:sign-out");
+
+			callback();
 		},
 
 		isLogged: function() {
@@ -442,15 +483,11 @@ app.config(function($routeProvider) {
 	})
 	.when("/user", {
 		templateUrl: 'pages/userinfo.html',
-		controller: 'userController'
+		controller: 'useradminController'
 	})
 	.when("/login", {
 		templateUrl: 'pages/login.html',
 		controller: 'loginController'
-	})
-	.when("/admin", {
-		templateUrl: 'pages/admin.html',
-		controller: 'adminController'
 	})
 	.when("/registrationok", {
 		templateUrl: 'pages/registrationok.html',
@@ -459,6 +496,10 @@ app.config(function($routeProvider) {
 	.when("/loginok", {
 		templateUrl: 'pages/loginok.html',
 		controller: 'loginokController'
+	})
+	.when("/logout", {
+		templateUrl: 'pages/login.html',
+		controller: 'loginController'
 	})
 
 	.otherwise({redirectTo: '/'});
@@ -599,11 +640,12 @@ app.controller('loginokController', ['$scope', 'loginService', function($scope, 
 	$scope.pageName = "Validation d'utilisateurs";
 
 	var user = Login.getUserInfo();
-	$scope.fullname = user.firstname + " " + user.lastname;
 	$scope.userConnected = Login.isLogged();
 }]);
-app.controller('userController',['$scope', 'loginService', function($scope, Login) {
-	$scope.pageName = "Utilisateur";$scope.userConnected = Login.isLogged();
+app.controller('useradminController',['$scope', 'loginService', function($scope, Login) {
+	$scope.pageName = "Utilisateur";
+	$scope.userConnected = Login.isLogged();
+	$scope.user = Login.getUserInfo();
 }]);
 app.controller('loginController', ['$http', '$location', '$scope', 'loginService', function($http, $location, $scope, Login) {
 	$scope.pageName = "Connexion";
@@ -629,8 +671,10 @@ app.controller('loginController', ['$http', '$location', '$scope', 'loginService
 	};
 
 	$scope.signout = function() {
-		Login.logout();
-		$scope.userConnected = true;
+		Login.logout(function() {
+			$location.path("/");
+			$scope.userConnected = false;
+		});
 	};
 }]);
 
