@@ -43,10 +43,6 @@ input[type=text] {
         float: left;
     }
 
-    .site-logo {
-        width: 200px;
-    }
-
     .current-page-wrapper {
         height: 80px;
     }
@@ -68,6 +64,10 @@ input[type=text] {
     .user-connect:hover, .user-login:hover {
             background-color: rgb(29, 127, 70);
     }
+}
+
+.content {
+  padding: 40px;
 }
 
 .nav-open {

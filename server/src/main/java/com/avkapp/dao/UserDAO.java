@@ -32,7 +32,7 @@ public class UserDAO {
 
 
 	public void initDb(String adminPassword, String adminEmail) throws SQLException {
-		insert(new User(0, 
+		insert(new User(0,
 						"Administrateur",
 						"Administrateur",
 						adminEmail,
@@ -51,8 +51,8 @@ public class UserDAO {
 	*/
 	public void acceptUser(int id) throws SQLException {
 		PreparedStatement stmt = null;
-		String query = "UPDATE Users " + 
-					   "SET Validated = 1 " + 
+		String query = "UPDATE Users " +
+					   "SET Validated = 1 " +
 					   "WHERE Id = ?;";
 
 		DatabaseHelper db = new DatabaseHelper();
@@ -65,7 +65,7 @@ public class UserDAO {
 			stmt.executeQuery();
 		}
 		catch (SQLException e) {
-			
+
 		}
 		finally {
 			if (stmt != null) stmt.close();
@@ -84,7 +84,7 @@ public class UserDAO {
 		try {
 			DatabaseHelper db = new DatabaseHelper();
 			conn = db.getConnection();
-			
+
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, user);
 			stmt.setString(2, shaPass);
@@ -128,8 +128,8 @@ public class UserDAO {
 	*/
 	public void updateOffice(int id, int newOffice) throws SQLException {
 		PreparedStatement stmt = null;
-		String query = "UPDATE Users " + 
-					   "SET Office = ? " + 
+		String query = "UPDATE Users " +
+					   "SET Office = ? " +
 					   "WHERE Id = ?;";
 
 		DatabaseHelper db = new DatabaseHelper();
@@ -143,7 +143,7 @@ public class UserDAO {
 			stmt.executeQuery();
 		}
 		catch (SQLException e) {
-			
+
 		}
 		finally {
 			if (stmt != null) stmt.close();
@@ -159,14 +159,14 @@ public class UserDAO {
 		Logger log = Logger.getLogger("AVKApp");
 
 		PreparedStatement stmt = null;
-		String query = "INSERT INTO Users(Firstname, Lastname, Email, Login, Phone, Password, PIN, Profile, Office, Validated) " + 
+		String query = "INSERT INTO Users(Firstname, Lastname, Email, Login, Phone, Password, PIN, Profile, Office, Validated) " +
 					   "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-		
-	
+
+
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
 		try {
-			stmt = conn.prepareStatement(query);		
+			stmt = conn.prepareStatement(query);
 			stmt.setString(1, i.getFirstname());
 			stmt.setString(2, i.getLastname());
 			stmt.setString(3, i.getEmail());
@@ -186,7 +186,7 @@ public class UserDAO {
 			stmt.setInt(9, i.getOffice());
 			stmt.setInt(10, i.getValidated());
 
-		
+
 			stmt.executeUpdate();
 		}
 		catch (SQLException e) {
@@ -209,8 +209,8 @@ public class UserDAO {
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
 		try {
-			stmt = conn.prepareStatement(query);		
-			stmt.setString(1, email);		
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, email);
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) return true;
@@ -236,8 +236,8 @@ public class UserDAO {
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
 		try {
-			stmt = conn.prepareStatement(query);		
-			stmt.setString(1, login);		
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, login);
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) return true;
@@ -267,7 +267,7 @@ public class UserDAO {
 		try {
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-		
+
 			result = new ArrayList<User>();
 
 			while (rs.next()) {
@@ -290,7 +290,7 @@ public class UserDAO {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
-		return result;	
+		return result;
 	}
 
 	/**
@@ -348,12 +348,12 @@ public class UserDAO {
 			query = "SELECT * FROM Users WHERE Users.Validated = 0;";
 		}
 		else if (userRole == Profile.ROLE_RESPONSABLE) {
-			query = "SELECT * FROM Users" + 
-					 "WHERE Users.Validated = 0" + 
-					 "AND Users.Office IN (" + 
-					 	"SELECT Office.Id FROM Office, Users" + 
-					 	"WHERE Office.Id = Users.Office" + 
-					 	"AND Users.Login = ?" + 
+			query = "SELECT * FROM Users" +
+					 "WHERE Users.Validated = 0" +
+					 "AND Users.Office IN (" +
+					 	"SELECT Office.Id FROM Office, Users" +
+					 	"WHERE Office.Id = Users.Office" +
+					 	"AND Users.Login = ?" +
 					 	"AND Users.Password = ?" +
 					 ");";
 		}
@@ -489,7 +489,7 @@ public class UserDAO {
 		try {
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-		
+
 			result = new ArrayList<User>();
 
 			while (rs.next()) {
@@ -513,7 +513,7 @@ public class UserDAO {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
-		return result;	
+		return result;
 	}
 
 	public User getById(int id) throws SQLException {
@@ -523,7 +523,7 @@ public class UserDAO {
 		Connection conn = db.getConnection();
 
 		PreparedStatement stmt = null;
-		String query = "SELECT Id, Firstname, Lastname, Email, Login, Phone, Password, Profile, Office FROM Users " + 
+		String query = "SELECT Id, Firstname, Lastname, Email, Login, Phone, Password, Profile, Office FROM Users " +
 					   "WHERE Id = ?;";
 		User result = null;
 
@@ -532,7 +532,7 @@ public class UserDAO {
 			stmt.setInt(1, id);
 
 			ResultSet rs = stmt.executeQuery(query);
-		
+
 			if (rs.next()) {
 				result = new User(rs.getInt(COL_ID),
 									  rs.getString(COL_FIRSTNAME),
@@ -553,6 +553,47 @@ public class UserDAO {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
-		return result;	
+		return result;
+	}
+
+  public User getUser(LoginInfo info) throws SQLException {
+		Logger log = Logger.getLogger("AVKApp");
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+		PreparedStatement stmt = null;
+		String query = "SELECT Id, Firstname, Lastname, Email, Login, Phone, Password, Profile, Office FROM Users " +
+					   "WHERE Login = ? AND Password = ?;";
+		User result = null;
+
+		try {
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, info.getLogin());
+      stmt.setString(2, info.getPassword());
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs.next()) {
+				result = new User(rs.getInt(COL_ID),
+									  rs.getString(COL_FIRSTNAME),
+								      rs.getString(COL_LASTNAME),
+								      rs.getString(COL_EMAIL),
+								      rs.getString(COL_LOGIN),
+								      rs.getString(COL_PHONE),
+								      rs.getString(COL_PASSWORD),
+								      rs.getString(COL_PIN),
+								      rs.getInt(COL_PROFILE),
+								      rs.getInt(COL_OFFICE));
+			}
+		}
+		catch (SQLException e) {
+			log.log(Level.WARNING, e.getMessage());
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+		return result;
 	}
 }

@@ -1,5 +1,3 @@
-@charset "UTF-8";
-@import url("//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
 /*! normalize.css v2.1.2 | MIT License | git.io/normalize */
 /* ==========================================================================
    HTML5 display definitions
@@ -7,6 +5,7 @@
 /**
  * Correct `block` display not defined in IE 8/9.
  */
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
 /* line 22, ../bower_components/foundation/scss/normalize.scss */
 article,
 aside,
@@ -8148,14 +8147,10 @@ input[type=text] {
   float: left;
 }
 /* line 46, ../scss/app.scss */
-.top-bar .site-logo {
-  width: 200px;
-}
-/* line 50, ../scss/app.scss */
 .top-bar .current-page-wrapper {
   height: 80px;
 }
-/* line 54, ../scss/app.scss */
+/* line 50, ../scss/app.scss */
 .top-bar .user-connect, .top-bar .user-login {
   width: 100px;
   display: inline-block;
@@ -8168,9 +8163,14 @@ input[type=text] {
   font-weight: bold;
   line-height: 80px;
 }
-/* line 68, ../scss/app.scss */
+/* line 64, ../scss/app.scss */
 .top-bar .user-connect:hover, .top-bar .user-login:hover {
   background-color: #1d7f46;
+}
+
+/* line 69, ../scss/app.scss */
+.content {
+  padding: 40px;
 }
 
 /* line 73, ../scss/app.scss */

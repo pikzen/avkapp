@@ -15,11 +15,12 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.HashMap;
 
 
 @Path("/login")
 public class LoginResource {
-	
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response login(LoginInfo log) {
@@ -27,8 +28,27 @@ public class LoginResource {
 		Response response = null;
 
 		try {
-			if (iDao.validate(log)) { 
-				response = Response.status(200).build();
+			if (iDao.validate(log)) {
+        User user = iDao.getUser(log);
+
+        if (user != null) {
+          HashMap<String, String> hm = new HashMap<String, String>();
+          hm.put("firstname", user.getFirstname());
+          hm.put("lastname",  user.getLastname());
+          hm.put("email",     user.getEmail());
+          hm.put("phone",     user.getPhone());
+          hm.put("profile",   (String)user.getProfile());
+          hm.put("profileText", getProfileAsText(user.getProfile()));
+          hm.put("office",    (String)user.getOffice());
+          hm.put("officeText", getOfficeAsText(user.getOffice()));
+
+          org.json.JSONObject data = new org.json.JSONObject(hm);
+
+		  		response = Response.status(200).entity(data.toString()).build();
+        }
+        else {
+          response = Response.status(500).build();
+        }
 			}
 			else {
 				response = Response.status(400).entity("Informations de connexion erronées : " + log.toString()).build();

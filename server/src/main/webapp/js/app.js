@@ -365,40 +365,8 @@ app.factory('loginService', ['$http', function($http){
 		}
 	}
 
-	function getAllData() {
-		if (User.isLogged) {
-				var loginInfo = {username: User.username, password: User.password};
-
-				$http.post("/avkapp/rest/users/" + User.username, loginInfo)
-				.success(function(data) {
-					UserInfo.firstname = data.firstname;
-					UserInfo.lastname = data.lastname;
-					UserInfo.email = data.email;
-					UserInfo.phone = data.phone;
-					
-					UserInfo.role = {};
-					UserInfo.role.id = data.profile;
-					UserInfo.role.text = getProfileAsText()
-					
-					UserInfo.office = {};
-					UserInfo.office.id = data.office;
-					UserInfo.office.text = getOfficeAsText();
-
-					UserInfo.isAdmin = (data.profile == 1);
-					UserInfo.isResponsable = (data.profile == 2);
-					UserInfo.isMedecin = (data.profile == 3);
-					UserInfo.isInfirmier = (data.profile == 4);
-					UserInfo.isAutoMed = (data.profile == 5);
-
-					User.hasOffice = (data.office != 0 && data.office != 1);
-				});
-		}
-	}
 
 	return {
-		getAllUserData: function() {
-			return getAllData();
-		},
 		login: function(loginInfo, pin, callback) {
 			$http.post("/avkapp/rest/login", loginInfo)
 			.success(function(data) {
@@ -406,8 +374,28 @@ app.factory('loginService', ['$http', function($http){
 				User.username = loginInfo.username;
 				User.password = loginInfo.password;
 				User.pin = pin;
-				console.log("Connexion OK");
-				getAllData();
+
+        UserInfo.firstname = data.firstname;
+				UserInfo.lastname = data.lastname;
+				UserInfo.email = data.email;
+				UserInfo.phone = data.phone;
+
+				UserInfo.role = {};
+				UserInfo.role.id = data.profile;
+				UserInfo.role.text = data.profileText;
+
+				UserInfo.office = {};
+				UserInfo.office.id = data.office;
+				UserInfo.office.text = data.officeText;
+
+				UserInfo.isAdmin = (data.profile == 1);
+				UserInfo.isResponsable = (data.profile == 2);
+				UserInfo.isMedecin = (data.profile == 3);
+				UserInfo.isInfirmier = (data.profile == 4);
+				UserInfo.isAutoMed = (data.profile == 5);
+
+				User.hasOffice = (data.office != 1 && data.office != 2);
+
 				callback();
 			})
 			.error(function(data) {
@@ -603,7 +591,7 @@ app.controller('inscriptionController',['$scope', '$http', '$location', 'loginSe
 				.success(function(data) {
 					if (data.status == 400) {
 						$scope.errorEmail = data.errorEmail;
-						$scope.errorLogin = data.errorLogin;	
+						$scope.errorLogin = data.errorLogin;
 					}
 				else {
 					$scope.status = "Registration OK";
@@ -656,7 +644,7 @@ app.controller('loginController', ['$http', '$location', '$scope', 'loginService
 	$scope.signin = function() {
 		var body = {username: $scope.loginInfo.login, password: $scope.loginInfo.password};
 
-		Login.login(body, $scope.loginInfo.pin, function() {
+		Login.login(body, $scope.loginInfo.pin, function(){
 			if (Login.isLogged()) {
 				Login.getAllUserData();
 				$scope.userConnected = Login.isLogged();
@@ -665,9 +653,9 @@ app.controller('loginController', ['$http', '$location', '$scope', 'loginService
 			else {
 				$scope.userConnected = false;
 				$scope.error = "Connexion refusée.";
-			}	
+			}
 		});
-		
+
 	};
 
 	$scope.signout = function() {

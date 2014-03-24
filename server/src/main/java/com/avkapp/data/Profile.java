@@ -16,11 +16,11 @@ public class Profile {
 	public static int ROLE_AUTOMED = 5;
 
 	// Liste des permissions (bitflags)
-	public static final int PERM_LISTALLUSERS 				= 1;
-	public static final int PERM_LISTSOMEUSERS				= 2;
-	public static final int PERM_VALIDATEALLUSERS			= 4;
-	public static final int PERM_VALIDATESOMEUSERS			= 8;
-	public static final int PERM_CREATEOFFICE				= 16;
+	public static final int PERM_LISTALLUSERS 				= 1;  // 00001
+	public static final int PERM_LISTSOMEUSERS				= 2;  // 00010
+	public static final int PERM_VALIDATEALLUSERS			= 4;  // 00100
+	public static final int PERM_VALIDATESOMEUSERS			= 8;// 01000
+	public static final int PERM_CREATEOFFICE				= 16;   // 10000
 	public static final int PERM_VALIDATEALLOFFICE 			= 32;
 	public static final int PERM_VALIDATEALLOFFICEJOIN 		= 64;
 	public static final int PERM_VALIDATESOMEOFFICEJOIN 	= 128;
@@ -37,21 +37,21 @@ public class Profile {
 	public static HashMap<Integer, Integer> ROLES  = new HashMap<Integer, Integer>();
 	// Initialisation des valeurs
 	static {
-		ROLES.put(ROLE_ADMIN, PERM_LISTALLUSERS | 
-							  PERM_VALIDATEALLUSERS | 
-							  PERM_CREATEOFFICE | 
-							  PERM_VALIDATEALLOFFICE | 
-							  PERM_VALIDATEALLOFFICEJOIN | 
+		ROLES.put(ROLE_ADMIN, PERM_LISTALLUSERS |
+							  PERM_VALIDATEALLUSERS |
+							  PERM_CREATEOFFICE |
+							  PERM_VALIDATEALLOFFICE |
+							  PERM_VALIDATEALLOFFICEJOIN |
 							  PERM_VALIDATEBECOMEOFFICERESP |
 							  PERM_ADDMEDICATION);
 
-		ROLES.put(ROLE_RESPONSABLE, PERM_LISTSOMEUSERS | 
-			                        PERM_VALIDATESOMEUSERS | 
-			                        PERM_VALIDATESOMEOFFICEJOIN | 
-			                        PERM_CREATEPATIENT | 
-			                        PERM_MODIFYPATIENT | 
-			                        PERM_BECOMEOFFICERESP | 
-			                        PERM_LISTOFFICEPATIENT | 
+		ROLES.put(ROLE_RESPONSABLE, PERM_LISTSOMEUSERS |
+			                        PERM_VALIDATESOMEUSERS |
+			                        PERM_VALIDATESOMEOFFICEJOIN |
+			                        PERM_CREATEPATIENT |
+			                        PERM_MODIFYPATIENT |
+			                        PERM_BECOMEOFFICERESP |
+			                        PERM_LISTOFFICEPATIENT |
 			                        PERM_LISTSELFPATIENT);
 
 		ROLES.put(ROLE_MEDECIN, PERM_ADDRECORD |
@@ -60,11 +60,11 @@ public class Profile {
 								PERM_LISTSELFPATIENT |
 								PERM_ADDPATIENTMED);
 
-		ROLES.put(ROLE_INFIRMIER, PERM_ADDRECORD | 
-								  PERM_LISTSELFPATIENT | 
+		ROLES.put(ROLE_INFIRMIER, PERM_ADDRECORD |
+								  PERM_LISTSELFPATIENT |
 								  PERM_LISTOFFICEPATIENT);
 
-		ROLES.put(ROLE_AUTOMED, PERM_ADDRECORD | 
+		ROLES.put(ROLE_AUTOMED, PERM_ADDRECORD |
 								PERM_LISTSELFPATIENT);
 	}
 
@@ -83,8 +83,8 @@ public class Profile {
 
 	@Override
 	public String toString() {
-		return "Profile[" + 
-						"id=" + Id + "," + 
+		return "Profile[" +
+						"id=" + Id + "," +
 				        "name=" + Name +
 				     "]";
 	}

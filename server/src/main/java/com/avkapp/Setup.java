@@ -59,87 +59,87 @@ public class Setup {
 
 		System.out.println("   Table: Medication");
 		// Instant gros blob de données.
-		String input = "INSERT INTO Medication(Name, INRImpact, Note) VALUES " + 
-"('Allopurinol','1','Jusqu\'a 8 jours après l\'arrêt')," + 
-"('Amiodarone','1','Jusqu\'à 8 jours après l’arrêt')," + 
-"('Androgenes','1','Jusqu\'a 8 jours après l\'arrêt')," + 
-"('ISRS : Citalopram','1','')," + 
-"('ISRS : Escitalopram','1','')," + 
-"('ISRS : Fluoxetine','1','')," + 
-"('ISRS : Fluvoxamine','1','')," + 
-"('ISRS : Sertraline','1','')," + 
-"('ISRS : Paroxetine','1','')," + 
-"('Benzbromaron','1','')," + 
-"('Aprepitants','-1','')," + 
-"('Aminogluthetimides','-1','Cancer du sein et de la prostate. Jusqu\'a 2 semaines après l\'arrêt')," + 
-"('Azathioprine','-1','')," + 
-"('Cefamandole','1','')," + 
-"('Cefoperazone','1','')," + 
-"('Cefotetan','1','')," + 
-"('Ceftriaxone','1','')," + 
-"('Cimetidine','1','Jusqu\'a 8 jours après l\'arrêt')," + 
-"('Cisapride','1','Jusqu\'a 8 jours après l\'arret')," + 
-"('Colchicine','1','Jusqu\'a 8 jours après l\'arret')," + 
-"('Cycline','1','')," + 
-"('Danazol','1','')," + 
-"('Econazole','1','Quelque soit le mode d\'administration')," + 
-"('Fibrate','1','Jusqu\'a 8 jours après l\'arrêt')," + 
-"('Fluconazole','1','Jusqu\'a 8 jours après l\'arrêt')," + 
-"('Itraconazole','1','Jusqu\'a 8 jours après l\'arrêt')," + 
-"('Voriconazole','1','Jusqu\'a 8 jours après l\'arrêt')," + 
-"('Oflaxacine','1','')," + 
-"('Pefloxacine','1','')," + 
-"('Enoxacine','1','')," + 
-"('Lomefloxacine','1','')," + 
-"('Moxifloxacine','1','')," + 
-"('Ciprofloxacine','1','')," + 
-"('Levofloxacine','1','')," + 
-"('Norfloxacine','1','')," + 
-"('Glucocorticoïdes','1','Faire un contrôle biologique au 8e jour, puis tous les 15 jours pendant la corticothérapie et après son arrêt. Contrôle de l\'INR 2 à 4 jours après le bolus de méthylprednisolone ou en présence de tous signes hémorragiques.')," + 
-"('Methylprednisolone','1','Faire un contrôle biologique au 8e jour, puis tous les 15 jours pendant la corticothérapie et après son arrêt. Contrôle de l\'INR 2 à 4 jours après le bolus de méthylprednisolone ou en présence de tous signes hémorragiques.')," + 
-"('HBPM','1','')," + 
-"('Levotyhroxine','1','')," + 
-"('Liothyronine Sodique','1','')," + 
-"('Thyroxines','1','')," + 
-"('Tiratricol','1','')," + 
-"('Statines','1','')," + 
-"('Azithromycine','1','')," + 
-"('Clarithromycine','1','')," + 
-"('Dirithromycine','1','')," + 
-"('Erythromycine','1','')," + 
-"('Josamycine','1','')," + 
-"('Midecamycine','1','')," + 
-"('Roxithromycine','1','')," + 
-"('Telithromycine','1','')," + 
-"('Troleandomycine','1','')," + 
-"('Metronidazole','1','')," + 
-"('Ornidazole','1','')," + 
-"('Secnidazole','1','')," + 
-"('Tinidazole','1','')," + 
-"('Orlistat','1','')," + 
-"('Paracetamol','1','Aux doses maximales (4g/j) pendant au moins 4 jours.')," + 
-"('Pentoxyfilline','1','Jusqu\'a 8 jours après l\'arrêt.')," + 
-"('Proguanil','1','')," + 
-"('Propafenone','1','')," + 
-"('Sulfamethoxazole','1','Jusqu\'a 8 jours après l\'arrêt.')," + 
-"('Sulfafurazole','1','Jusqu\'a 8 jours après l\'arrêt.')," + 
-"('Sulfamethizol','1','Jusqu\'a 8 jours après l\'arrêt.')," + 
-"('Tamoxifene','1','')," + 
-"('Tibolone','1','')," + 
-"('Tramadol','1','')," + 
-"('Viloxazine','1','')," + 
-"('Vitamine E','1','')," + 
-"('Anti agrégents plaquettaires','1','')," + 
-"('Alcoolisme aigü','1','')," + 
-"('Bosentan','-1','')," + 
-"('Coletstyramine','-1','Prendre la Coletstyramine à distance de la Coumadine (plus de 2h)')," + 
-"('Griseofulvine','-1','Jusqu\'a 8 jours après l\'arrêt')," + 
-"('Mercaptopurine','-1','')," + 
-"('Nevirapine','-1','')," + 
-"('Efavirenz','-1','')," + 
-"('Rifampicine','-1','Jusqu\'a 8 jours après l\'arrêt.')," + 
-"('Ritonavir','-1','')," + 
-"('Sucralfate','-1','Prendre à distance de la Coumadine (plus de 2h)')";
+		String input = "INSERT INTO Medication(Name, INRImpact, Note) VALUES " +
+                    "('Allopurinol','1','Jusqu\'a 8 jours après l\'arrêt')," +
+                    "('Amiodarone','1','Jusqu\'à 8 jours après l’arrêt')," +
+                    "('Androgenes','1','Jusqu\'a 8 jours après l\'arrêt')," +
+                    "('ISRS : Citalopram','1','')," +
+                    "('ISRS : Escitalopram','1','')," +
+                    "('ISRS : Fluoxetine','1','')," +
+                    "('ISRS : Fluvoxamine','1','')," +
+                    "('ISRS : Sertraline','1','')," +
+                    "('ISRS : Paroxetine','1','')," +
+                    "('Benzbromaron','1','')," +
+                    "('Aprepitants','-1','')," +
+                    "('Aminogluthetimides','-1','Cancer du sein et de la prostate. Jusqu\'a 2 semaines après l\'arrêt')," +
+                    "('Azathioprine','-1','')," +
+                    "('Cefamandole','1','')," +
+                    "('Cefoperazone','1','')," +
+                    "('Cefotetan','1','')," +
+                    "('Ceftriaxone','1','')," +
+                    "('Cimetidine','1','Jusqu\'a 8 jours après l\'arrêt')," +
+                    "('Cisapride','1','Jusqu\'a 8 jours après l\'arret')," +
+                    "('Colchicine','1','Jusqu\'a 8 jours après l\'arret')," +
+                    "('Cycline','1','')," +
+                    "('Danazol','1','')," +
+                    "('Econazole','1','Quelque soit le mode d\'administration')," +
+                    "('Fibrate','1','Jusqu\'a 8 jours après l\'arrêt')," +
+                    "('Fluconazole','1','Jusqu\'a 8 jours après l\'arrêt')," +
+                    "('Itraconazole','1','Jusqu\'a 8 jours après l\'arrêt')," +
+                    "('Voriconazole','1','Jusqu\'a 8 jours après l\'arrêt')," +
+                    "('Oflaxacine','1','')," +
+                    "('Pefloxacine','1','')," +
+                    "('Enoxacine','1','')," +
+                    "('Lomefloxacine','1','')," +
+                    "('Moxifloxacine','1','')," +
+                    "('Ciprofloxacine','1','')," +
+                    "('Levofloxacine','1','')," +
+                    "('Norfloxacine','1','')," +
+                    "('Glucocorticoïdes','1','Faire un contrôle biologique au 8e jour, puis tous les 15 jours pendant la corticothérapie et après son arrêt. Contrôle de l\'INR 2 à 4 jours après le bolus de méthylprednisolone ou en présence de tous signes hémorragiques.')," +
+                    "('Methylprednisolone','1','Faire un contrôle biologique au 8e jour, puis tous les 15 jours pendant la corticothérapie et après son arrêt. Contrôle de l\'INR 2 à 4 jours après le bolus de méthylprednisolone ou en présence de tous signes hémorragiques.')," +
+                    "('HBPM','1','')," +
+                    "('Levotyhroxine','1','')," +
+                    "('Liothyronine Sodique','1','')," +
+                    "('Thyroxines','1','')," +
+                    "('Tiratricol','1','')," +
+                    "('Statines','1','')," +
+                    "('Azithromycine','1','')," +
+                    "('Clarithromycine','1','')," +
+                    "('Dirithromycine','1','')," +
+                    "('Erythromycine','1','')," +
+                    "('Josamycine','1','')," +
+                    "('Midecamycine','1','')," +
+                    "('Roxithromycine','1','')," +
+                    "('Telithromycine','1','')," +
+                    "('Troleandomycine','1','')," +
+                    "('Metronidazole','1','')," +
+                    "('Ornidazole','1','')," +
+                    "('Secnidazole','1','')," +
+                    "('Tinidazole','1','')," +
+                    "('Orlistat','1','')," +
+                    "('Paracetamol','1','Aux doses maximales (4g/j) pendant au moins 4 jours.')," +
+                    "('Pentoxyfilline','1','Jusqu\'a 8 jours après l\'arrêt.')," +
+                    "('Proguanil','1','')," +
+                    "('Propafenone','1','')," +
+                    "('Sulfamethoxazole','1','Jusqu\'a 8 jours après l\'arrêt.')," +
+                    "('Sulfafurazole','1','Jusqu\'a 8 jours après l\'arrêt.')," +
+                    "('Sulfamethizol','1','Jusqu\'a 8 jours après l\'arrêt.')," +
+                    "('Tamoxifene','1','')," +
+                    "('Tibolone','1','')," +
+                    "('Tramadol','1','')," +
+                    "('Viloxazine','1','')," +
+                    "('Vitamine E','1','')," +
+                    "('Anti agrégents plaquettaires','1','')," +
+                    "('Alcoolisme aigü','1','')," +
+                    "('Bosentan','-1','')," +
+                    "('Coletstyramine','-1','Prendre la Coletstyramine à distance de la Coumadine (plus de 2h)')," +
+                    "('Griseofulvine','-1','Jusqu\'a 8 jours après l\'arrêt')," +
+                    "('Mercaptopurine','-1','')," +
+                    "('Nevirapine','-1','')," +
+                    "('Efavirenz','-1','')," +
+                    "('Rifampicine','-1','Jusqu\'a 8 jours après l\'arrêt.')," +
+                    "('Ritonavir','-1','')," +
+                    "('Sucralfate','-1','Prendre à distance de la Coumadine (plus de 2h)')";
 
 	try {
 		db.query(input);
