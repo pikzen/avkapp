@@ -33,17 +33,6 @@ CREATE TABLE INRTreatmentPhase (
         Name        VARCHAR(10)
 ) ENGINE=INNODB;
 
-CREATE TABLE INRHistoryValue (
-        Id          INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        Date        DATE NOT NULL,
-        INRValue    FLOAT(4,2) NOT NULL,
-        Bleeding    BOOLEAN NOT NULL,
-        Phase       INT(1) UNSIGNED NOT NULL,
-        Patient     INT(6) UNSIGNED NOT NULL,
-        CONSTRAINT fkPatient FOREIGN KEY (Patient) REFERENCES Patient(Id),
-	CONSTRAINT fkPhase FOREIGN KEY (Phase) REFERENCES INRTreatmentPhase(Id)
-) ENGINE=INNODB;
-
 CREATE TABLE INRTreatment (
         Id          INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         Med         INT(1) UNSIGNED NOT NULL,
@@ -65,6 +54,17 @@ CREATE TABLE Patient (
         Treatment   INT(6) UNSIGNED NOT NULL,
         SpecialINR  VARCHAR(20),
         CONSTRAINT fkTreatment FOREIGN KEY (Treatment) REFERENCES INRTreatment(Id)
+) ENGINE=INNODB;
+
+CREATE TABLE INRHistoryValue (
+        Id          INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        Date        DATE NOT NULL,
+        INRValue    FLOAT(4,2) NOT NULL,
+        Bleeding    BOOLEAN NOT NULL,
+        Phase       INT(1) UNSIGNED NOT NULL,
+        Patient     INT(6) UNSIGNED NOT NULL,
+        CONSTRAINT fkPatient FOREIGN KEY (Patient) REFERENCES Patient(Id),
+        CONSTRAINT fkPhase FOREIGN KEY (Phase) REFERENCES INRTreatmentPhase(Id)
 ) ENGINE=INNODB;
 
 
@@ -102,16 +102,18 @@ CREATE TABLE OfficeResponsable (
 
 CREATE TABLE OfficeSwitch (
         UserId      INT(6) UNSIGNED,
-        OfficeId    INT(6) UNSIGNED,
+        OldOfficeId    INT(6) UNSIGNED,
+        NewOfficeId    INT(6) UNSIGNED,
         CONSTRAINT fkUserIdOS FOREIGN KEY (UserId) REFERENCES Users(Id),
-        CONSTRAINT fkOfficeIdOS FOREIGN KEY (OfficeId) REFERENCES Office(Id)
+        CONSTRAINT fkOfficeIdOS FOREIGN KEY (OldOfficeId) REFERENCES Office(Id),
+        CONSTRAINT fkNewOfficeIdOS FOREIGN KEY (NewOfficeId) REFERENCES Office(Id)
 ) ENGINE=INNODB;
 
 CREATE TABLE OfficePatients (
         Id          INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         OfficeId        INT(6) UNSIGNED NOT NULL,
         Patient     INT(6) UNSIGNED NOT NULL,
-        CONSTRAINT fkUser FOREIGN KEY (UserId) REFERENCES Office(Id),
+        CONSTRAINT fkUser FOREIGN KEY (Id) REFERENCES Office(Id),
         CONSTRAINT fkPatient1 FOREIGN KEY (Patient) REFERENCES Patient(Id)
 ) ENGINE=INNODB;
 

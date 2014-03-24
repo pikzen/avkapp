@@ -32,11 +32,14 @@ public class DatabaseHelper {
 	}
 
 	public Connection getConnection() throws SQLException {
+		return ds.getConnection();
+	}
+
+	public DatabaseHelper() {
 		ds = new MysqlDataSource();
 		ds.setUser(this.UserName);
 		ds.setPassword(this.Password);
 		ds.setServerName(this.Host);
 		ds.setDatabaseName(this.Database);
-		return ds.getConnection();
 	}
 }
