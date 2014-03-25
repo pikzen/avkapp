@@ -5,25 +5,6 @@ GRANT USAGE ON *.* to root@localhost IDENTIFIED BY 'rootpassword';
 
 USE avkapp;
 
-DROP TABLE IF EXISTS INRTreatmentDuration;
-DROP TABLE IF EXISTS INRTreatmentDuration;
-DROP TABLE IF EXISTS MedicationDuration;
-DROP TABLE IF EXISTS UserPatients;
-DROP TABLE IF EXISTS Users;
-DROP TABLE IF EXISTS PatientNotes;
-DROP TABLE IF EXISTS INRRecords;
-DROP TABLE IF EXISTS OfficeResponsable;
-DROP TABLE IF EXISTS Patient;
-DROP TABLE IF EXISTS INRTreatment;
-DROP TABLE IF EXISTS INRHistoryValue;
-DROP TABLE IF EXISTS INRTreatmentPhase;
-DROP TABLE IF EXISTS INRMedication;
-DROP TABLE IF EXISTS Notes;
-DROP TABLE IF EXISTS Medication;
-DROP TABLE IF EXISTS Profile;
-DROP TABLE IF EXISTS Office;
-
-
 CREATE TABLE Office (
         Id          INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         Name        VARCHAR(40) NOT NULL,
@@ -246,7 +227,7 @@ INSERT INTO Medication(Name, INRImpact, Note) VALUES
 ("Efavirenz","-1",""),
 ("Rifampicine","-1","Jusqu'a 8 jours après l'arrêt."),
 ("Ritonavir","-1",""),
-("Sucralfate","-1","Prendre à distance de la Coumadine (plus de 2h)")
+("Sucralfate","-1","Prendre à distance de la Coumadine (plus de 2h)");
 
 INSERT INTO Profile(Name) VALUES ("Administrateur"), ("Responsable de cabinet"), ("Medecin"), ("Infirmier"), ("Patient");
 INSERT INTO Office(Name, Address, PhoneNumber) VALUES ("Aucun cabinet", "no-address", "no-phone"), ("Je créérai mon cabinet", "no-address", "no-phone");
