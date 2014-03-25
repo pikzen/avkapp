@@ -603,7 +603,7 @@ app.controller('validateController',['$scope', 'loginService', function($scope, 
 app.controller('loginokController', ['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Validation d'utilisateurs";
 
-	$scope.fullname = Login.getUserInfo().getFirstname() + " " + Login.getUserInfo().getLastname();
+	$scope.fullname = Login.getUser().getFirstname() + " " + Login.getUser().getLastname();
 	$scope.userConnected = Login.isLogged();
 }]);
 

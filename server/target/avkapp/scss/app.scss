@@ -30,9 +30,10 @@ $z_back: 1;
 }
 
 span.error {
-    color: red;
-    font-size: 8pt;
-    line-height: 20pt;
+  color: red;
+  font-size: 8pt;
+  line-height: 20pt;
+  background: none !important;
 }
 
 input[type=text] {
@@ -81,6 +82,7 @@ input[type=text] {
 // Get the navigation off-canvas
 .nav-closed {
     left: -240px;
+    min-height: 0px important;
 }
 
 .page-name {
@@ -121,13 +123,24 @@ input[type=text] {
         height: 100%;
         font-size: 10pt;
         min-width: 300px;
-        min-height: 600px;
         color: white;
         box-shadow: 5px 0px 10px #444;
         border: 1px solid #2b3d52;
-        transition: left 0.2s linear;
+
+        transition: left 0.2s;
 
         a {
+
+            &.nolink {
+              cursor: default;
+              font-size: 18pt;
+              font-weight: bold;
+              text-transform: uppercase;
+              background-color: #2b3d52;
+
+              &:hover {
+              }
+            }
             height: 50px;
             display: block;
             padding-left: 20px;
