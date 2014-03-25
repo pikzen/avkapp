@@ -52,7 +52,8 @@ public class Profile {
 			                        PERM_MODIFYPATIENT |
 			                        PERM_BECOMEOFFICERESP |
 			                        PERM_LISTOFFICEPATIENT |
-			                        PERM_LISTSELFPATIENT);
+			                        PERM_LISTSELFPATIENT |
+                              PERM_CREATEOFFICE);
 
 		ROLES.put(ROLE_MEDECIN, PERM_ADDRECORD |
 								PERM_MODIFYPATIENT |

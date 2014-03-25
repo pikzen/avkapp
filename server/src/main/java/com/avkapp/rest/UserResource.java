@@ -20,16 +20,16 @@ import java.util.logging.Level;
 
 @Path("/users")
 public class UserResource {
-	
+
 	@POST
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUserById(@PathParam("id") String id, LoginInfo info) {	
+	public Response getUserById(@PathParam("id") String id, LoginInfo info) {
 		UserDAO uDao = new UserDAO();
 		Response response = null;
 
 		try {
-			User profile = uDao.getByLoginInfo(info);
+			User profile = uDao.getUser(info);
 			if (profile != null) {
 				response = Response.status(200).entity(profile).build();
 			}
@@ -45,10 +45,10 @@ public class UserResource {
 
 		return response;
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getJSONUsers() {	
+	public Response getJSONUsers() {
 		UserDAO inter = new UserDAO();
 		Response response = null;
 

@@ -30,7 +30,6 @@ public class UserDAO {
 	static final String COL_OFFICE = "Office";
 	static final String COL_PIN = "PIN";
 
-
 	public void initDb(String adminPassword, String adminEmail) throws SQLException {
 		insert(new User(0,
 						"Administrateur",
@@ -196,7 +195,7 @@ public class UserDAO {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
-	}
+  }
 
 	/**
 	* Vérifie si un email est déjà présent dans la liste des utilisateurs
@@ -364,45 +363,6 @@ public class UserDAO {
 		return null;
 	}
 
-	public User getByLoginInfo(LoginInfo log) throws SQLException {
-		DatabaseHelper db = new DatabaseHelper();
-		Connection conn = db.getConnection();
-
-		PreparedStatement stmt = null;
-		String query = "SELECT * FROM Users WHERE Login = ? AND Password = ?;";
-		User result = null;
-
-		try {
-			stmt = conn.prepareStatement(query);
-			stmt.setString(1, log.getUsername());
-			stmt.setString(2, Encryption.SHA256(log.getPassword()));
-
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				result = new User(rs.getInt(COL_ID),
-								  rs.getString(COL_FIRSTNAME),
-							      rs.getString(COL_LASTNAME),
-							      rs.getString(COL_EMAIL),
-							      rs.getString(COL_LOGIN),
-							      rs.getString(COL_PHONE),
-							      rs.getString(COL_PASSWORD),
-							      rs.getString(COL_PIN),
-							      rs.getInt(COL_PROFILE),
-							      rs.getInt(COL_OFFICE));
-			}
-		}
-		catch (SQLException e) {
-
-		}
-		finally {
-			if (stmt != null) stmt.close();
-			if (conn != null) conn.close();
-		}
-
-		return result;
-	}
-
 	public boolean validate(LoginInfo log) throws SQLException {
 
 		DatabaseHelper db = new DatabaseHelper();
@@ -523,7 +483,7 @@ public class UserDAO {
 		Connection conn = db.getConnection();
 
 		PreparedStatement stmt = null;
-		String query = "SELECT Id, Firstname, Lastname, Email, Login, Phone, Password, Profile, Office FROM Users " +
+		String query = "SELECT * FROM Users " +
 					   "WHERE Id = ?;";
 		User result = null;
 
@@ -563,16 +523,16 @@ public class UserDAO {
 		Connection conn = db.getConnection();
 
 		PreparedStatement stmt = null;
-		String query = "SELECT Id, Firstname, Lastname, Email, Login, Phone, Password, Profile, Office FROM Users " +
+		String query = "SELECT * FROM Users " +
 					   "WHERE Login = ? AND Password = ?;";
 		User result = null;
 
 		try {
 			stmt = conn.prepareStatement(query);
-			stmt.setString(1, info.getLogin());
-      stmt.setString(2, info.getPassword());
+			stmt.setString(1, info.getUsername());
+      stmt.setString(2, Encryption.SHA256(info.getPassword()));
 
-			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
 				result = new User(rs.getInt(COL_ID),

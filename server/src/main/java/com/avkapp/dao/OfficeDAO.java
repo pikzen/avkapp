@@ -26,24 +26,42 @@ public class OfficeDAO {
 						  "no-phone"));
 		insert(new Office(CREATE_OFFICE,
 			              "Je créérai mon cabinet",
-						  "no-address",	
+						  "no-address",
 						  "no-phone"));
 	}
+
+  public String getOfficeAsText(int off) throws SQLException {
+    PreparedStatement stmt = null;
+		String query = "SELECT Name FROM Office WHERE Id=?;";
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+    stmt = conn.prepareStatement(query);
+    stmt.setInt(1, off);
+
+    ResultSet rs = stmt.executeQuery();
+
+    if (rs.next()) return rs.getString(COL_NAME);
+
+    return "";
+  }
+
 	public void insert(Office i) throws SQLException {
 		Logger log = Logger.getLogger("AVKApp");
 
 		PreparedStatement stmt = null;
 		String query = "INSERT INTO Office(Name, Address, PhoneNumber) VALUES( ?, ?, ?);";
-		
-	
+
+
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
 		try {
-			stmt = conn.prepareStatement(query);		
+			stmt = conn.prepareStatement(query);
 			stmt.setString(1, i.getName());
 			stmt.setString(2, i.getAddress());
 			stmt.setString(3, i.getPhone());
-		
+
 			stmt.executeUpdate();
 		}
 		catch (SQLException e) {
@@ -59,11 +77,11 @@ public class OfficeDAO {
 		Office result = null;
 
 		try {
-			stmt = conn.prepareStatement(query);		
+			stmt = conn.prepareStatement(query);
 			stmt.setString(1, id);
-		
+
 			ResultSet rs =  stmt.executeQuery();
-		
+
 			if (rs.next()) {
 				result = new Office(rs.getInt(COL_ID),
 										  rs.getString(COL_NAME),
@@ -77,7 +95,7 @@ public class OfficeDAO {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
-		return result;	
+		return result;
 	}
 	public ArrayList<Office> getAll() throws SQLException {
 		Logger log = Logger.getLogger("AVKApp");
@@ -92,7 +110,7 @@ public class OfficeDAO {
 		try {
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-		
+
 			result = new ArrayList<Office>();
 
 			while (rs.next()) {
@@ -110,6 +128,6 @@ public class OfficeDAO {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
-		return result;	
+		return result;
 	}
 }

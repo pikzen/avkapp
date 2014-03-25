@@ -1,0 +1,78 @@
+<div class="row">
+	<div class="large-12 columns">
+		<h1>Aide Rapide</h1>
+		<div class="row inr-input">
+			<div class="large-3 small-6 columns">
+				<h6>INR Cible</h6>
+				<input type="text" id="inr-target" placeholder="INR Cible">
+				<small class="error" id="inr-target-error">Veuillez entrer un INR cible valable.</small>
+			</div>
+			<div class="large-9 small-6 columns">
+				<h6>INR Mesuré</h6>
+				<input type="text" id="inr-value" placeholder="INR Mesuré">
+				<small class="error" id="inr-value-error">Veuillez entrer un INR mesuré valable.</small>
+			</div>
+		</div>
+		<div class="row inr-settings">
+			<div class="large-3 columns treatment-stage">
+				<select id="treatment-stage">
+					<option selected value="-1">Stage</option>
+					<option value="1">Initiation</option>
+					<option value="2">Entretien</option>
+				</select>
+				<small class="error">Veuillez selectionner un stage.</small>
+			</div>
+			<div class="large-3 columns med-type">
+				<select id="med-type">
+					<option selected value="-1">Medicament</option>
+					<option value="1">Fluindione (Previscan)</option>
+					<option value="2">Warfarine (Coumadine)</option>
+				</select>
+				<small class="error">Veuillez selectionner un médicament.</small>
+			</div>
+			<div class="large-3 columns previscan-phase">
+				<select id="previscan-phase">
+					<option selected value="-1">Etape</option>
+					<option value="1">Jours 0, 1, 2</option>
+					<option value="2">Jour 3</option>
+				</select>
+				<small class="error">Veuillez selectionner une phase du traitement.</small>
+			</div>
+			<div class="large-3 columns coumadine-phase">
+				<select id="coumadine-phase">
+					<option selected value="-1">Etape</option>
+					<option value="1">Jours 0, 1, 2</option>
+					<option value="2">Jour 3</option>
+					<option value="3">Jour 4</option>
+				</select>
+				<small class="error">Veuillez selectionner une phase du traitement.</small>
+			</div>
+			<div class="large-3 columns patient-cat">
+				<select id="patient-cat">
+					<option selected value="-1">Catégorie du patient</option>
+					<option value="1">>75 ans, >45kgs</option>
+					<option value="2"><75 ans, <45kgs </option>
+				</select>
+				<small class="error">Veuillez selectionner une catégorie de patient.</small>
+			</div>
+			<div class="large-3 columns hemorragie">
+				<input id="hemorragie" type="checkbox"> Hémorragie ?
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-12 columns">
+				<a href="#" class="button" id="inr-validate">Valider</a>
+			</div>
+		</div>
+		<div class="row inr-result">
+			<div class="large-3 columns">
+				<h2 id="inr-result-value"></h2>
+			</div>
+			<div class="large-9 columns">
+				<h2 id="inr-result"></h2>
+			</div>
+		</div>
+
+
+	</div>
+</div>

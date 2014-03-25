@@ -40,13 +40,22 @@ public class Office {
 		this.Phone = p;
 	}
 
+  public Office(String n, String a, String p) {
+    this.Name = n;
+    this.Address = a;
+    this.Phone = p;
+  }
+
+  public Office() {
+  }
+
 	@Override
 	public String toString() {
-		return "Office[" + 
-						"id=" + Id + "," + 
+		return "Office[" +
+						"id=" + Id + "," +
 				        "name=" + Name + "," +
 				        "address=" + Address + "," +
-				        "phone=" + Phone + 
+				        "phone=" + Phone +
 				     "]";
 	}
 

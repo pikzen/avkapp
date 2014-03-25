@@ -19,11 +19,12 @@ import java.util.logging.Level;
 
 @Path("/profiles")
 public class ProfileResource {
-	
+
+
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getProfileById(@PathParam("id") String id) {	
+	public Response getProfileById(@PathParam("id") String id) {
 		ProfileDAO inter = new ProfileDAO();
 		Response response = null;
 
@@ -61,10 +62,10 @@ public class ProfileResource {
 
 		return response;
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getJSONProfiles() {	
+	public Response getJSONProfiles() {
 		ProfileDAO inter = new ProfileDAO();
 		Response response = null;
 

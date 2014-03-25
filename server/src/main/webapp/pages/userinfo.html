@@ -1,5 +1,10 @@
 <div ng-controller="useradminController" class="row">
-	<h1 class="page-name">{{user.firstname}} {{user.lastname}}</h1>
+	<div ng-if="!user.isLogged">
+        <p>Vous n'ètes pas connecté. <a href="#/login">Connectez vous</a>.</p>
+    </div>
+
+    <div ng-if="user.isLogged">
+        <h1 class="page-name">{{user.firstname}} {{user.lastname}}</h1>
 
 	<div class="large-12 columns valid-user">
 		<div class="row user">
@@ -16,10 +21,9 @@
 		</div>
 	</div>
 
-	<div class="responsable-office-user-list" ng-if="user.hasOffice">
+	<div class="responsable-office-user-list user-section" ng-if="user.hasOffice">
 			<div class="categ-header">
-				<h3>Patients du cabinet</h3>
-				<i class="fa fa-chevron-down" ng-click="ui.office.patientsCollapsed = !ui.office.patientsCollapsed"></i>
+				<h3>Patients du cabinet <i class="fa fa-chevron-down" ng-click="ui.office.patientsCollapsed = !ui.office.patientsCollapsed"></i></h3>
 			</div>
 			<table ng-show="!ui.office.patientsCollapsed">
 				<thead>
@@ -55,13 +59,12 @@
 		</div>
 
 	<h2>Gestion du compte</h2>
-	<a href="#/changeoffice">Changer de cabinet</a>
+	<a href="#/changeoffice" >Changer de cabinet</a>
 
-	<div class="responsable" ng-if="user.isResponsable">
-		<div class="responsable-separator">
+	<div class="responsable user-section" ng-if="user.isResponsable">
 			<h2>Gestion du cabinet</h2>
 		</div>
-		<div class="responsable-office-user-list" ng-if="!user.hasOffice">
+		<div class="responsable-office-user-list">
 			<div class="categ-header">
 				<h3>Créér un cabinet</h3>
 			</div>
@@ -71,7 +74,7 @@
 						<label class="right inline">Nom du cabinet</label>
 					</div>
 					<div class="large-10 columns">
-						<input type="text" placeholder="Nom du cabinet" ng-model="newOffice.name"></input>
+						<input type="text" placeholder="Nom du cabinet" ng-model="officeInfo.name"></input>
 					</div>
 				</div>
 
@@ -80,7 +83,7 @@
 						<label class="right inline">Adresse du cabinet</label>
 					</div>
 					<div class="large-10 columns">
-						<input type="text" placeholder="Adresse" ng-model="newOffice.address"></input>
+						<input type="text" placeholder="Adresse" ng-model="officeInfo.address"></input>
 					</div>
 				</div>
 
@@ -89,7 +92,7 @@
 						<label class="right inline">Téléphone</label>
 					</div>
 					<div class="large-10 columns">
-						<input type="text" placeholder="Téléphone" ng-model="newOffice.phone"></input>
+						<input type="text" placeholder="Téléphone" ng-model="officeInfo.phone"></input>
 					</div>
 				</div>
 
@@ -98,10 +101,9 @@
 				</div>
 			</form>
 		</div>
-		<div class="responsable-office-user-list">
+		<div class="responsable-office-user-list user-section">
 			<div class="categ-header">
-				<h3>Membres du cabinet</h3>
-				<i class="fa fa-chevron-down" ng-click="ui.office.usersCollapsed = !ui.office.usersCollapsed"></i>
+				<h3>Membres du cabinet <i class="fa fa-chevron-down" ng-click="ui.office.usersCollapsed = !ui.office.usersCollapsed"></i></h3>
 			</div>
 			<table ng-show="!ui.office.usersCollapsed">
 				<thead>
@@ -126,8 +128,7 @@
 		</div>
 		<div class="responsable-office-user-list">
 			<div class="categ-header">
-				<h3>Utilisateurs en attente</h3>
-				<i class="fa fa-chevron-down" ng-click="ui.office.usersWaitingCollapsed = !ui.office.usersWaitingCollapsed"></i>
+				<h3>Utilisateurs en attente <i class="fa fa-chevron-down" ng-click="ui.office.usersWaitingCollapsed = !ui.office.usersWaitingCollapsed"></i></h3>
 			</div>
 			<table ng-show="!ui.office.usersWaitingCollapsed">
 				<thead>
@@ -147,7 +148,7 @@
 						<td>{{usr.email}}</td>
 						<td>{{usr.phone}}</td>
 						<td>{{usr.profile}}</td>
-						<td><i ng-click="officeAccept({{usr.id}})" class="fa fa-check"></i></td>
+						<td><i ng-click="officeAccept()" class="fa fa-check"></i></td>
 					</tr>
 				</tbody>
 			</table>
@@ -160,8 +161,8 @@
 		</div>
 		<div class="admin-user-list">
 			<div class="categ-header">
-				<h3>Utilisateurs</h3>
-				<i class="fa fa-chevron-down" ng-click="ui.admin.usersCollapsed = !ui.admin.usersCollapsed"></i>
+				<h3>Utilisateurs <i class="fa fa-chevron-down" ng-click="ui.admin.usersCollapsed = !ui.admin.usersCollapsed"></i></h3>
+
 			</div>
 			<table ng-show="!ui.admin.usersCollapsed">
 				<thead>
@@ -209,7 +210,7 @@
 						<td>{{usr.email}}</td>
 						<td>{{usr.phone}}</td>
 						<td>{{usr.profile}}</td>
-						<td><i ng-click="adminValidate({{usr.id}})" class="fa fa-check"></i></td>
+						<td><i ng-click="adminValidate()" class="fa fa-check"></i></td>
 					</tr>
 				</tbody>
 			</table>
@@ -226,4 +227,5 @@
 				<span ng-if="userConnected == false">Inscription</span>
 		</a>
 	</div>
+    </div>
 </div>

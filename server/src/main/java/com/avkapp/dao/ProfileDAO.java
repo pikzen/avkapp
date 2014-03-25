@@ -28,20 +28,38 @@ public class ProfileDAO {
 
 		PreparedStatement stmt = null;
 		String query = "INSERT INTO Profile(Name) VALUES(?);";
-		
-	
+
+
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
 		try {
-			stmt = conn.prepareStatement(query);		
+			stmt = conn.prepareStatement(query);
 			stmt.setString(1, i.getName());
-		
+
 			stmt.executeUpdate();
 		}
 		catch (SQLException e) {
 			log.log(Level.WARNING, e.getMessage());
 		}
 	}
+
+  public String getProfileAsText(int prof) throws SQLException {
+    PreparedStatement stmt = null;
+		String query = "SELECT Name FROM Profile WHERE Id=?";
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+    stmt = conn.prepareStatement(query);
+    stmt.setInt(1, prof);
+
+    ResultSet rs = stmt.executeQuery();
+
+    if (rs.next()) return rs.getString(COL_NAME);
+
+    return "";
+  }
+
 	public Profile getById(String id) throws SQLException {
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
@@ -51,11 +69,11 @@ public class ProfileDAO {
 		Profile result = null;
 
 		try {
-			stmt = conn.prepareStatement(query);		
+			stmt = conn.prepareStatement(query);
 			stmt.setString(1, id);
-		
+
 			ResultSet rs =  stmt.executeQuery();
-		
+
 			if (rs.next()) {
 				result = new Profile(rs.getInt(COL_ID), rs.getString(COL_NAME));
 			}
@@ -66,7 +84,7 @@ public class ProfileDAO {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
-		return result;	
+		return result;
 	}
 	public ArrayList<Profile> getAll() throws SQLException {
 		Logger log = Logger.getLogger("AVKApp");
@@ -81,7 +99,7 @@ public class ProfileDAO {
 		try {
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-		
+
 			result = new ArrayList<Profile>();
 
 			while (rs.next()) {
@@ -97,6 +115,6 @@ public class ProfileDAO {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
-		return result;	
+		return result;
 	}
 }

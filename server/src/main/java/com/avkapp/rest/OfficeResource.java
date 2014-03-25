@@ -10,31 +10,60 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.avkapp.data.Office;
 import com.avkapp.dao.OfficeDAO;
+import com.avkapp.data.LoginInfo;
+import com.avkapp.dao.UserDAO;
+import com.avkapp.data.Profile;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.io.Serializable;
 import javax.ws.rs.PathParam;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 
 @Path("/offices")
 public class OfficeResource {
-	
 
+  static class OfficeLoginContainer implements Serializable {
+		@JsonProperty("office")
+		private Office Office;
+
+		@JsonProperty("login")
+		private LoginInfo Login;
+
+    public Office getOffice() {
+      return this.Office;
+    }
+
+		public LoginInfo getLogin() {
+			return this.Login;
+		}
+	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createOffice(Office inter) {
-		OfficeDAO iDao = new OfficeDAO();
+	public Response createOffice(OfficeLoginContainer data) {
+		int privileges = Profile.PERM_CREATEOFFICE;
+
+    OfficeDAO iDao = new OfficeDAO();
+    UserDAO uDao = new UserDAO();
 		Response response = null;
 
-		try {
-			iDao.insert(inter);
-			response = Response.status(200).build();
-		}
-		catch (SQLException e) {
-			response = Response.status(500).build();
-		}
+    Logger.getLogger("AVKAPP").log(Level.WARNING, data.getLogin().toString());
+
+    if (uDao.authorize(privileges, data.getLogin().getUsername(), data.getLogin().getPassword())) {
+		  try {
+			  iDao.insert(data.getOffice());
+			  response = Response.status(200).build();
+		  }
+		  catch (SQLException e) {
+  			response = Response.status(500).build();
+  		}
+    }
+    else {
+      response = Response.status(403).build();
+    }
 
 		return response;
 	}
@@ -42,7 +71,7 @@ public class OfficeResource {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getOfficeById(@PathParam("id") String id) {	
+	public Response getOfficeById(@PathParam("id") String id) {
 		OfficeDAO inter = new OfficeDAO();
 		Response response = null;
 
@@ -64,10 +93,10 @@ public class OfficeResource {
 
 		return response;
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getJSONOffices() {	
+	public Response getJSONOffices() {
 		OfficeDAO inter = new OfficeDAO();
 		Response response = null;
 
@@ -80,7 +109,7 @@ public class OfficeResource {
 			else {
 				response = Response.status(400).build();
 			}
-			
+
 		}
 		catch (SQLException e) {
 			Logger log = Logger.getLogger("AVKappLogger");

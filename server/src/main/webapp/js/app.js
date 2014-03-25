@@ -344,9 +344,6 @@ app.factory('loginService', ['$http', function($http){
 		password: ''
 	};
 
-	var UserInfo = {};
-
-
 	function getOfficeAsText() {
 		if (User.isLogged) {
 			$http.get("/avkapp/rest/offices/" + UserInfo.office.id)
@@ -375,24 +372,24 @@ app.factory('loginService', ['$http', function($http){
 				User.password = loginInfo.password;
 				User.pin = pin;
 
-        UserInfo.firstname = data.firstname;
-				UserInfo.lastname = data.lastname;
-				UserInfo.email = data.email;
-				UserInfo.phone = data.phone;
+        User.firstname = data.firstname;
+				User.lastname = data.lastname;
+				User.email = data.email;
+				User.phone = data.phone;
 
-				UserInfo.role = {};
-				UserInfo.role.id = data.profile;
-				UserInfo.role.text = data.profileText;
+				User.role = {};
+				User.role.id = data.profile;
+				User.role.text = data.profileText;
 
-				UserInfo.office = {};
-				UserInfo.office.id = data.office;
-				UserInfo.office.text = data.officeText;
+				User.office = {};
+				User.office.id = data.office;
+				User.office.text = data.officeText;
 
-				UserInfo.isAdmin = (data.profile == 1);
-				UserInfo.isResponsable = (data.profile == 2);
-				UserInfo.isMedecin = (data.profile == 3);
-				UserInfo.isInfirmier = (data.profile == 4);
-				UserInfo.isAutoMed = (data.profile == 5);
+				User.isAdmin = (data.profile == 1);
+				User.isResponsable = (data.profile == 2);
+				User.isMedecin = (data.profile == 3);
+				User.isInfirmier = (data.profile == 4);
+				User.isAutoMed = (data.profile == 5);
 
 				User.hasOffice = (data.office != 1 && data.office != 2);
 
@@ -403,7 +400,8 @@ app.factory('loginService', ['$http', function($http){
 			});
 		},
 		logout: function(callback) {
-			User.isLogged = false;
+			User = {};
+      User.isLogged = false;
 			User.username = '';
 			User.pin = '';
 			User.password = '';
@@ -414,30 +412,8 @@ app.factory('loginService', ['$http', function($http){
 		isLogged: function() {
 			return User.isLogged;
 		},
-
-		getUserInfo: function() {
-			return UserInfo;
-		},
 		getUser: function() {
 			return User;
-		},
-		getProfileAsText: function(profileNum) {
-			var out = "";
-			$http.get("/avkapp/rest/profile/" + profileNum)
-			.success(function(data) {
-				out = data.profile;
-			})
-
-			return out;
-		},
-		getOfficeAsText: function(officeNum) {
-			var out = "";
-			$http.get("/avkapp/rest/office/" + officeNum)
-			.success(function(data) {
-				out = data.office;
-			})
-
-			return out;
 		}
 	}
 }]);
@@ -627,13 +603,37 @@ app.controller('validateController',['$scope', 'loginService', function($scope, 
 app.controller('loginokController', ['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Validation d'utilisateurs";
 
-	var user = Login.getUserInfo();
+	$scope.fullname = Login.getUser().getFirstname() + " " + Login.getUser().getLastname();
 	$scope.userConnected = Login.isLogged();
 }]);
-app.controller('useradminController',['$scope', 'loginService', function($scope, Login) {
+
+/*
+* #/user
+*/
+app.controller('useradminController',['$scope', 'loginService', '$http', function($scope, Login, $http) {
 	$scope.pageName = "Utilisateur";
-	$scope.userConnected = Login.isLogged();
-	$scope.user = Login.getUserInfo();
+  $scope.user = {};
+  $scope.user.isLogged = false;
+
+
+  $scope.officeInfo = {};
+
+  if (Login.isLogged()) {
+	  $scope.user = Login.getUser();
+  }
+
+  $scope.createOffice = function() {
+    var body = {login: {username: $scope.user.username, password: $scope.user.password}, office: $scope.officeInfo};
+    console.log(body);
+
+    $http.post("/avkapp/rest/offices", body)
+    .success(function(data) {
+      alert("Ok");
+    })
+    .error(function(data) {
+      alert("Error");
+    });
+  };
 }]);
 app.controller('loginController', ['$http', '$location', '$scope', 'loginService', function($http, $location, $scope, Login) {
 	$scope.pageName = "Connexion";
@@ -646,7 +646,6 @@ app.controller('loginController', ['$http', '$location', '$scope', 'loginService
 
 		Login.login(body, $scope.loginInfo.pin, function(){
 			if (Login.isLogged()) {
-				Login.getAllUserData();
 				$scope.userConnected = Login.isLogged();
 				$location.path("/loginok");
 			}
