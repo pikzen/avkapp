@@ -10,7 +10,7 @@ CREATE TABLE Office (
         Name        VARCHAR(40) NOT NULL,
         Address     VARCHAR(200) NOT NULL,
         PhoneNumber VARCHAR(20) NOT NULL,
-        Validated   BOOLEAN NOT NULL,
+        Validated   BOOLEAN NOT NULL
 ) ENGINE=INNODB;
 
 CREATE TABLE Profile (

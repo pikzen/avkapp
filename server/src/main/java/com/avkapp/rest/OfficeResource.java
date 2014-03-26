@@ -2,6 +2,7 @@ package com.avkapp.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.Path;
@@ -30,52 +31,85 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @Path("/offices")
 public class OfficeResource {
 
-  static class OfficeLoginContainer implements Serializable {
+  	static class OfficeLoginContainer implements Serializable {
 		@JsonProperty("office")
 		private Office Office;
 
 		@JsonProperty("login")
 		private LoginInfo Login;
 
-    public Office getOffice() {
-      return this.Office;
-    }
+	    public Office getOffice() {
+	      return this.Office;
+	    }
 
 		public LoginInfo getLogin() {
 			return this.Login;
 		}
 	}
 
-	@POST
+	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createOffice(OfficeLoginContainer data) {
 		int privileges = Profile.PERM_CREATEOFFICE;
 
-    OfficeDAO iDao = new OfficeDAO();
-    UserDAO uDao = new UserDAO();
+	    OfficeDAO iDao = new OfficeDAO();
+	    UserDAO uDao = new UserDAO();
 		Response response = null;
 
-    Logger.getLogger("AVKAPP").log(Level.WARNING, data.getLogin().toString());
+	    Logger.getLogger("AVKAPP").log(Level.WARNING, data.getLogin().toString());
 
-    if (uDao.authorize(privileges, data.getLogin().getUsername(), data.getLogin().getPassword())) {
-		  try {
-			  iDao.insert(data.getOffice());
-			  response = Response.status(200).build();
-		  }
-		  catch (SQLException e) {
-  			response = Response.status(500).build();
-  		}
-    }
-    else {
-      response = Response.status(403).build();
-    }
+	    if (uDao.authorize(privileges, data.getLogin().getUsername(), data.getLogin().getPassword())) {
+			  try {
+				  iDao.insert(data.getOffice());
+				  response = Response.status(200).build();
+			  }
+			  catch (SQLException e) {
+	  			response = Response.status(500).build();
+	  		}
+	    }
+	    else {
+	      response = Response.status(403).build();
+	    }
+
+			return response;
+	}
+
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAll(LoginInfo log) {
+		UserDAO uDao = new UserDAO();
+		OfficeDAO oDao = new OfficeDAO();
+		Response response = null;
+		int privileges = Profile.PERM_LISTALLOFFICES;
+
+		if (uDao.authorize(privileges, log.getUsername(), log.getPassword())) {
+			try {
+				ArrayList<Office> all = oDao.getAll(log);
+
+				if (all != null) {
+					GenericEntity<List<Office>> data = new GenericEntity<List<Office>>(all) {};
+					response = Response.status(200).entity(data).build();
+				}
+				else {
+					response = Response.status(404).build();	
+				}
+			}
+			catch (SQLException e) {
+				response = Response.status(500).build();
+			}
+		}
+		else {
+			response = Response.status(403).build();
+		}
 
 		return response;
+
 	}
 
 	@POST
 	@Path("waiting")
-	@Produces Response getWaiting(LoginInfo log) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getWaiting(LoginInfo log) {
 		UserDAO uDao = new UserDAO();
 		OfficeDAO oDao = new OfficeDAO();
 		Response response = null;
@@ -121,32 +155,6 @@ public class OfficeResource {
 			else {
 				response = Response.status(400).build();
 			}
-		}
-		catch (SQLException e) {
-			Logger log = Logger.getLogger("AVKappLogger");
-			log.log(java.util.logging.Level.WARNING, e.getMessage());
-			response = Response.status(500).build();
-		}
-
-		return response;
-	}
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getJSONOffices() {
-		OfficeDAO inter = new OfficeDAO();
-		Response response = null;
-
-		try {
-			ArrayList<Office> all = inter.getAll();
-			Logger log = Logger.getLogger("AVKapp");
-			if (all != null) {
-				response = Response.status(200).entity(all).build();
-			}
-			else {
-				response = Response.status(400).build();
-			}
-
 		}
 		catch (SQLException e) {
 			Logger log = Logger.getLogger("AVKappLogger");

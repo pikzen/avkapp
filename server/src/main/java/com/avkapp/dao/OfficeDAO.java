@@ -170,38 +170,46 @@ public class OfficeDAO {
 		}
 		return result;
 	}
-	public ArrayList<Office> getAll() throws SQLException {
-		Logger log = Logger.getLogger("AVKApp");
+	public ArrayList<Office> getAll(LoginInfo log) throws SQLException {
+		String shaPass = Encryption.SHA256(log.getPassword());
 
+		PreparedStatement stmt = null;
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
-
-		Statement stmt = null;
-		String query = "SELECT Id, Name, Address, PhoneNumber FROM Office;";
+		String query = "";
 		ArrayList<Office> result = null;
 
+		// MySQL utilise un TINYINT pour représenter un BOOLEAN. 0 = false, x = true
+		query = "SELECT * FROM Office;";
 		try {
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			stmt = conn.prepareStatement(query);
+		}
+		catch (SQLException e) {
+		}
+
+
+		try {
+
+			ResultSet rs = stmt.executeQuery();
 
 			result = new ArrayList<Office>();
 
 			while (rs.next()) {
 				Office inter = new Office(rs.getInt(COL_ID),
-										  rs.getString(COL_NAME),
-								    	  rs.getString(COL_ADDRESS),
-								    	  rs.getString(COL_PHONE),
-								    	  rs.getInt(COL_VALIDATED));
+									  rs.getString(COL_NAME),
+								      rs.getString(COL_ADDRESS),
+								      rs.getString(COL_PHONE),
+								      rs.getInt(COL_VALIDATED));
 				result.add(inter);
 			}
 		}
 		catch (SQLException e) {
-			log.log(Level.WARNING, e.getMessage());
 		}
 		finally {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
+
 		return result;
 	}
 }

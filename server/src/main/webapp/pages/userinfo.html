@@ -210,7 +210,7 @@
 						<td>{{usr.email}}</td>
 						<td>{{usr.phone}}</td>
 						<td>{{usr.profile}}</td>
-						<td><i ng-click="adminValidate({{usr.id}})" class="fa fa-check"></i></td>
+						<td><i ng-click="adminValidate(usr.id)" class="fa fa-check"></i></td>
 					</tr>
 				</tbody>
 			</table>
@@ -252,7 +252,7 @@
 						<td>{{off.name}}</td>
 						<td>{{off.address}}</td>
 						<td>{{off.phone}}</td>
-						<td><span ng-click="officeValidate({{off.id}})"><i class="fa fa-check"></i></span></td>
+						<td><span ng-click="officeValidate(off.id)"><i class="fa fa-check"></i></span></td>
 					</tr>
 				</tbody>
 			</table>

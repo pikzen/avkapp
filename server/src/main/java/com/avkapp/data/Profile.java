@@ -35,19 +35,21 @@ public class Profile {
 	public static final int PERM_ADDPATIENTMED				= 65536;
 	public static final int PERM_LISTALLWAITING				= 131072;
 	public static final int PERM_LISTOFFICEWAITING			= 262144;
+	public static final int PERM_LISTALLOFFICES				= 524288;
 
 	public static HashMap<Integer, Integer> ROLES  = new HashMap<Integer, Integer>();
 	// Initialisation des valeurs
 	static {
-		ROLES.put(ROLE_ADMIN, PERM_LISTALLUSERS |
-							  PERM_VALIDATEALLUSERS |
-							  PERM_LISTALLWAITING |
-							  PERM_LISTOFFICEWAITING |
-							  PERM_CREATEOFFICE |
-							  PERM_VALIDATEALLOFFICE |
-							  PERM_VALIDATEALLOFFICEJOIN |
+		ROLES.put(ROLE_ADMIN, PERM_LISTALLUSERS 			|
+							  PERM_VALIDATEALLUSERS 		|
+							  PERM_LISTALLWAITING 			|
+							  PERM_LISTOFFICEWAITING 		|
+							  PERM_CREATEOFFICE 			|
+							  PERM_VALIDATEALLOFFICE 		|
+							  PERM_VALIDATEALLOFFICEJOIN 	|
 							  PERM_VALIDATEBECOMEOFFICERESP |
-							  PERM_ADDMEDICATION);
+							  PERM_ADDMEDICATION 			|
+							  PERM_LISTALLOFFICES 			| PERM_LISTALLOFFICES);
 
 		ROLES.put(ROLE_RESPONSABLE, PERM_LISTOFFICEUSERS |
 			                        PERM_VALIDATEOFFICEUSERS |
@@ -57,7 +59,7 @@ public class Profile {
 			                        PERM_BECOMEOFFICERESP |
 			                        PERM_LISTOFFICEPATIENT |
 			                        PERM_LISTSELFPATIENT |
-                              PERM_CREATEOFFICE);
+                              	PERM_CREATEOFFICE);
 
 		ROLES.put(ROLE_MEDECIN, PERM_ADDRECORD |
 								PERM_MODIFYPATIENT |

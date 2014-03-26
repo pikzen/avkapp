@@ -615,18 +615,22 @@ app.controller('useradminController',['$scope', 'loginService', '$http', functio
 
   if ($scope.user.isAdmin) {
 		var body = {username: $scope.user.username, password: $scope.user.password}
+
 		$http.post("/avkapp/rest/users/waiting", body)
 		.success(function(data) {
 			$scope.admin.waiting = data;
 		});
+
 		$http.post("/avkapp/rest/users", body)
 		.success(function(data) {
 			$scope.admin.users = data;
 		});
+
 		$http.post("/avkapp/rest/offices", body)
-		.success(function(data)) {
+		.success(function(data) {
 			$scope.admin.offices = data;
 		});
+
 		$http.post("/avkapp/rest/offices/waiting", body)
 		.success(function(data) {
 			$scope.admin.officesWaiting = data;
@@ -638,7 +642,7 @@ app.controller('useradminController',['$scope', 'loginService', '$http', functio
     var body = {login: {username: $scope.user.username, password: $scope.user.password}, office: $scope.officeInfo};
     console.log(body);
 
-    $http.post("/avkapp/rest/offices", body)
+    $http.put("/avkapp/rest/offices", body)
     .success(function(data) {
       alert("Ok");
     })
