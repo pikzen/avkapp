@@ -29,6 +29,29 @@ public class OfficeDAO {
 						  "no-address",
 						  "no-phone"));
 	}
+	public void acceptOffice(int id) throws SQLException {
+		PreparedStatement stmt = null;
+		String query = "UPDATE Office " +
+					   "SET Validated = 1 " +
+					   "WHERE Id = ?;";
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+		try {
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, id);
+
+			stmt.executeQuery();
+		}
+		catch (SQLException e) {
+
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+	}
 
   public String getOfficeAsText(int off) throws SQLException {
     PreparedStatement stmt = null;

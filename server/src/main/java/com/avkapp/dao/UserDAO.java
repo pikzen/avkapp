@@ -29,6 +29,7 @@ public class UserDAO {
 	static final String COL_PROFILE = "Profile";
 	static final String COL_OFFICE = "Office";
 	static final String COL_PIN = "PIN";
+	static final String COL_VALIDATED = "Validated";
 
 	public void initDb(String adminPassword, String adminEmail) throws SQLException {
 		insert(new User(0,
@@ -137,7 +138,8 @@ public class UserDAO {
 								      rs.getString(COL_PASSWORD),
 								      rs.getString(COL_PIN),
 								      rs.getInt(COL_PROFILE),
-								      rs.getInt(COL_OFFICE));
+								      rs.getInt(COL_OFFICE),
+								      rs.getInt(COL_VALIDATED));
 				result.add(inter);
 			}
 		}
@@ -464,7 +466,8 @@ public class UserDAO {
 								      rs.getString(COL_PASSWORD),
 								      rs.getString(COL_PIN),
 								      rs.getInt(COL_PROFILE),
-								      rs.getInt(COL_OFFICE));
+								      rs.getInt(COL_OFFICE),
+								      rs.getInt(COL_VALIDATED));
 				result.add(inter);
 			}
 		}
@@ -509,7 +512,8 @@ public class UserDAO {
 								      rs.getString(COL_PASSWORD),
 								      rs.getString(COL_PIN),
 								      rs.getInt(COL_PROFILE),
-								      rs.getInt(COL_OFFICE));
+								      rs.getInt(COL_OFFICE),
+								      rs.getInt(COL_VALIDATED));
 				result.add(inter);
 			}
 		}
@@ -550,7 +554,8 @@ public class UserDAO {
 								      rs.getString(COL_PASSWORD),
 								      rs.getString(COL_PIN),
 								      rs.getInt(COL_PROFILE),
-								      rs.getInt(COL_OFFICE));
+								      rs.getInt(COL_OFFICE),
+								      rs.getInt(COL_VALIDATED));
 			}
 		}
 		catch (SQLException e) {
@@ -591,7 +596,8 @@ public class UserDAO {
 								      rs.getString(COL_PASSWORD),
 								      rs.getString(COL_PIN),
 								      rs.getInt(COL_PROFILE),
-								      rs.getInt(COL_OFFICE));
+								      rs.getInt(COL_OFFICE),
+								      rs.getInt(COL_VALIDATED));
 			}
 		}
 		catch (SQLException e) {
