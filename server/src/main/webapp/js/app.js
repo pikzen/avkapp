@@ -690,13 +690,47 @@ app.controller('historiqueController',['$scope', 'loginService','$http', functio
 	$scope.currentPat = {};
 	$scope.histo = {};
 	$scope.patientSelected = false;
+	$scope.patientId = -1;
 
-	$scope.swapPatient(id) = function() {
+	$scope.swapPatient = function(id) {
+		$scope.patientId = id;
+		$scope.patientSelected = true;
 
+		var body = {username: $scope.user.username, 
+					password: $scope.user.password,
+					pin:      $scope.user.pin}
+
+		$http.post("/avkapp/rest/historique/" + $scope.patientId, body)
+		.success(function(data) {
+			$scope.currentPat = data;
+			$scope.histo =
+		})
+		.error(function(data) {
+			$scope.message = "Impossible de récupérer les informations du patient."
+		})
 	};
 
-	$scope.addHistorique() = function() {
+	$scope.addHistorique = function(id) {
+		var body = {loginpin: {
+						username: $scope.user.username, 
+						password: $scope.user.password,
+						pin:      $scope.user.pin
+					},
+					historique: {
+						date: $scope.histo.date,
+						amount: $scope.histo.amount,
+						newMed: $scope.histo.med,
+						inr: $scope.histo.inr
+					}};
 
+		$http.post("/avkapp/rest/historique/" + $scope.patientId, body)
+		.success(function(data) {
+			$scope.currentPat.historique.push(data);
+			$scope.message = "Valeurs inserées dans la base de données.";
+		})
+		.error(function(data) {
+			$scope.message = "Impossible d'insérer dans la base de données. Vérifiez que vous avez entré le bon PIN.";
+		});
 	};
 
 

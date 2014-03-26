@@ -57,16 +57,16 @@
 				</table>
 				<form ng-submit="addHistorique()">
 					<label>Date</label>
-					<input type="date" ng-model="histo.date">
+					<input type="date" ng-model="histo.date" required>
 
-					<label>Dosage</label>
+					<label>Nouveau dosage (Vide si aucun changement)</label>
 					<input type="text" ng-model="histo.amount">
 
 					<label>Medicament</label>
-					<select ng-model="histo.med"><option ng-repeat="med in medicaments"></option></select>
+					<select ng-model="histo.med"><option ng-repeat="med in medicaments" value="{{med.id}}"></option></select>
 
 					<label>INR Relevé</label>
-					<input type="text" ng-model="histo.inr">
+					<input type="text" ng-model="histo.inr" required>
 				</form>
 			</div>
 		</div>
