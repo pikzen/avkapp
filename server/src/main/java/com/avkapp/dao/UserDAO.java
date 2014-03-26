@@ -72,13 +72,95 @@ public class UserDAO {
 		}
 	}
 
+	public boolean validate(LoginInfo log) {
+		return authorize(0, log.getUsername(), log.getPassword());
+	}
+
+	public ArrayList<User> getWaiting(LoginInfo log) throws SQLException {
+		String shaPass = Encryption.SHA256(log.getPassword());
+
+		PreparedStatement stmt = null;
+		int userRole = this.getRole(log);
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+		String query = "";
+		ArrayList<User> result = null;
+
+		if (userRole == Profile.ROLE_ADMIN) {
+			// MySQL utilise un TINYINT pour représenter un BOOLEAN. 0 = false, x = true
+			query = "SELECT * FROM Users WHERE Validated = 0;";
+			try {
+				stmt = conn.prepareStatement(query);
+			}
+			catch (SQLException e) {
+
+			}
+		}
+		else if (userRole == Profile.ROLE_RESPONSABLE) {
+			query = "SELECT * FROM Users " +
+					 "WHERE Users.Validated = 0 " +
+					 "AND Users.Office IN ( " +
+					 	"SELECT Office.Id FROM Office, Users " +
+					 	"WHERE Office.Id = Users.Office " +
+					 	"AND Users.Login = ? " +
+					 	"AND Users.Password = ? " +
+					 	"AND Users.Validated = 0" + 
+					 ");";
+			try {
+				stmt = conn.prepareStatement(query);
+				stmt.setString(1, log.getUsername());
+				stmt.setString(2, shaPass);
+			}
+			catch (SQLException e) {
+
+			}
+		}
+		else {
+			return null;
+		}
+
+
+		try {
+
+			ResultSet rs = stmt.executeQuery();
+
+			result = new ArrayList<User>();
+
+			while (rs.next()) {
+				User inter = new User(rs.getInt(COL_ID),
+									  rs.getString(COL_FIRSTNAME),
+								      rs.getString(COL_LASTNAME),
+								      rs.getString(COL_EMAIL),
+								      rs.getString(COL_LOGIN),
+								      rs.getString(COL_PHONE),
+								      rs.getString(COL_PASSWORD),
+								      rs.getString(COL_PIN),
+								      rs.getInt(COL_PROFILE),
+								      rs.getInt(COL_OFFICE));
+				result.add(inter);
+			}
+		}
+		catch (SQLException e) {
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+
+		return result;
+	}
+
 	public boolean authorize(int required, String user, String password) {
 		String shaPass = Encryption.SHA256(password);
+
 
 		PreparedStatement stmt = null;
 		String query = "SELECT Profile FROM Users WHERE Login = ? AND Password = ? AND Validated = 1";
 
 		Connection conn = null;
+
+		Logger.getLogger("AVKApp").log(Level.WARNING, user + "@" + password);
 
 		try {
 			DatabaseHelper db = new DatabaseHelper();
@@ -93,19 +175,23 @@ public class UserDAO {
 				int rights = Profile.ROLES.get(rs.getInt(COL_PROFILE));
 
 				if ((rights & required) == required) {
+					Logger.getLogger("AVKApp").log(Level.WARNING, "OK");
 					return true;
 				}
 				else {
 					// Droits insuffisants
+					Logger.getLogger("AVKApp").log(Level.WARNING, "Droits insuffisants");
 					return false;
 				}
 			}
 			else {
+				// Utilisateur non existant
+				Logger.getLogger("AVKApp").log(Level.WARNING, "Utilisateur non existant");
 				return false;
 			}
 		}
 		catch(SQLException e) {
-
+			Logger.getLogger("AVKApp").log(Level.WARNING, "SQLException");
 		}
 		finally {
 			try {
@@ -250,53 +336,12 @@ public class UserDAO {
 
 		return false;
 	}
-	/**
-	* Renvoie la liste des utilisateurs non validés.
-	* Cette méthode les renvoie tous, à n'utiliser que pour l'administrateur
-	* @return La liste des utilisateurs non validés
-	*/
-	public ArrayList<User> getUnvalidatedUsers() throws SQLException {
-		DatabaseHelper db = new DatabaseHelper();
-		Connection conn = db.getConnection();
-
-		Statement stmt = null;
-		String query = "SELECT Id, Firstname, Lastname, Email, Login, Phone, Password,PIN, Profile, Office FROM Users WHERE Validated = 0;";
-		ArrayList<User> result = null;
-
-		try {
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-
-			result = new ArrayList<User>();
-
-			while (rs.next()) {
-				User inter = new User(rs.getInt(COL_ID),
-									  rs.getString(COL_FIRSTNAME),
-								      rs.getString(COL_LASTNAME),
-								      rs.getString(COL_EMAIL),
-								      rs.getString(COL_LOGIN),
-								      rs.getString(COL_PHONE),
-								      rs.getString(COL_PASSWORD),
-								      rs.getString(COL_PIN),
-								      rs.getInt(COL_PROFILE),
-								      rs.getInt(COL_OFFICE));
-				result.add(inter);
-			}
-		}
-		catch (SQLException e) {
-		}
-		finally {
-			if (stmt != null) stmt.close();
-			if (conn != null) conn.close();
-		}
-		return result;
-	}
 
 	/**
 	* Renvoie le rôle d'un utilisateur
 	* @param info L'utilisateur à vérifier
 	*/
-	private int getRole(LoginInfo info) throws SQLException {
+	public int getRole(LoginInfo info) throws SQLException {
 
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
@@ -324,85 +369,13 @@ public class UserDAO {
 
 		return -1;
 	}
-
-	/**
-	* Returns the list of users that this person can list
-	* Administrator can list everyone, Responsable can list those who are in his office
-	* @param info The user information
-	* @return The list of users, or null if the user is not allowed to list
-	*/
-	private ArrayList<User> listableUsers(LoginInfo info) throws SQLException {
-		PreparedStatement stmt = null;
-		int userRole = getRole(info);
-
-		DatabaseHelper db = new DatabaseHelper();
-		Connection conn = db.getConnection();
-		String query = "";
-
-		if (userRole == -1) {
-			return null;
-		}
-		else if (userRole == Profile.ROLE_ADMIN) {
-			// MySQL utilise un TINYINT pour représenter un BOOLEAN. 0 = false, x = true
-			query = "SELECT * FROM Users WHERE Users.Validated = 0;";
-		}
-		else if (userRole == Profile.ROLE_RESPONSABLE) {
-			query = "SELECT * FROM Users" +
-					 "WHERE Users.Validated = 0" +
-					 "AND Users.Office IN (" +
-					 	"SELECT Office.Id FROM Office, Users" +
-					 	"WHERE Office.Id = Users.Office" +
-					 	"AND Users.Login = ?" +
-					 	"AND Users.Password = ?" +
-					 ");";
-		}
-		else {
-			return null;
-		}
-
-		return null;
-	}
-
-	public boolean validate(LoginInfo log) throws SQLException {
+	private int getOffice(LoginInfo info) throws SQLException {
 
 		DatabaseHelper db = new DatabaseHelper();
 		Connection conn = db.getConnection();
 
 		PreparedStatement stmt = null;
-		String query = "SELECT * FROM Users WHERE Login = ? AND Password = ?;";
-
-		try {
-			stmt = conn.prepareStatement(query);
-			stmt.setString(1, log.getUsername());
-			stmt.setString(2, Encryption.SHA256(log.getPassword()));
-
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				return true;
-			}
-		}
-		catch (SQLException e) {
-
-		}
-		finally {
-			if (stmt != null) stmt.close();
-			if (conn != null) conn.close();
-		}
-
-		return false;
-	}
-
-	private boolean isAuthorizedToListUsers(LoginInfo info) throws SQLException {
-		if (info == null || info.getUsername() == null || info.getPassword() == null) {
-			return false;
-		}
-
-		DatabaseHelper db = new DatabaseHelper();
-		Connection conn = db.getConnection();
-
-		PreparedStatement stmt = null;
-		String query = "SELECT Profile FROM Users WHERE Login = ? AND Password = ?;";
+		String query = "SELECT Office FROM Users WHERE Login = ? AND Password = ?;";
 		try {
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, info.getUsername());
@@ -411,12 +384,7 @@ public class UserDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
-				int profile = rs.getInt(COL_PROFILE);
-
-				if (profile == Profile.ROLE_ADMIN ||
-					profile == Profile.ROLE_RESPONSABLE) {
-					return true;
-				}
+				return rs.getInt(COL_OFFICE);
 			}
 		}
 		catch (SQLException e) {
@@ -427,9 +395,88 @@ public class UserDAO {
 			if (conn != null) conn.close();
 		}
 
-		return false;
+		return -1;
 	}
 
+	/**
+	* Returns the list of users that this person can list
+	* Administrator can list everyone, Responsable can list those who are in his office
+	* @param info The user information
+	* @return The list of users, or null if the user is not allowed to list
+	*/
+	public ArrayList<User> listableUsers(LoginInfo info) throws SQLException {
+		String shaPass = Encryption.SHA256(info.getPassword());
+
+		PreparedStatement stmt = null;
+		int userRole = getRole(info);
+		int office = getOffice(info);
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+		String query = "";
+		ArrayList<User> result = null;
+
+		if (userRole == Profile.ROLE_ADMIN) {
+			// MySQL utilise un TINYINT pour représenter un BOOLEAN. 0 = false, x = true
+			query = "SELECT * FROM Users;";
+			try {
+				stmt = conn.prepareStatement(query);
+			}
+			catch (SQLException e) {
+
+			}
+		}
+		else if (userRole == Profile.ROLE_RESPONSABLE) {
+			query = "SELECT * FROM Users" +
+					 "WHERE Users.Office IN (" +
+					 	"SELECT Office.Id FROM Office, Users" +
+					 	"WHERE Office.Id = Users.Office" +
+					 	"AND Office.Id = ?" + 
+					 	"AND Users.Login = ?" +
+					 	"AND Users.Password = ?" +
+					 ");";
+			try {
+				stmt = conn.prepareStatement(query);
+				stmt.setInt(1, office);
+				stmt.setString(2, info.getUsername());
+				stmt.setString(3, shaPass);
+			}
+			catch (SQLException e) {
+				
+			}
+		}
+		else {
+			return null;
+		}
+
+		try {
+			ResultSet rs = stmt.executeQuery();
+
+			result = new ArrayList<User>();
+
+			while (rs.next()) {
+				User inter = new User(rs.getInt(COL_ID),
+									  rs.getString(COL_FIRSTNAME),
+								      rs.getString(COL_LASTNAME),
+								      rs.getString(COL_EMAIL),
+								      rs.getString(COL_LOGIN),
+								      rs.getString(COL_PHONE),
+								      rs.getString(COL_PASSWORD),
+								      rs.getString(COL_PIN),
+								      rs.getInt(COL_PROFILE),
+								      rs.getInt(COL_OFFICE));
+				result.add(inter);
+			}
+		}
+		catch (SQLException e) {
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+
+		return result;
+	}
 
 	/**
 	* Returns the list of all users

@@ -117,4 +117,36 @@ public class ProfileDAO {
 		}
 		return result;
 	}
+	public ArrayList<Profile> getAllPublic() throws SQLException {
+		Logger log = Logger.getLogger("AVKApp");
+
+		DatabaseHelper db = new DatabaseHelper();
+		Connection conn = db.getConnection();
+
+		Statement stmt = null;
+		// On ne renvoie pas l'administrateur, pour des raisons évidentes
+		String query = "SELECT * FROM Profile WHERE Id != 1;";
+		ArrayList<Profile> result = null;
+
+		try {
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			result = new ArrayList<Profile>();
+
+			while (rs.next()) {
+				Profile inter = new Profile(rs.getInt(COL_ID),
+										  rs.getString(COL_NAME));
+				result.add(inter);
+			}
+		}
+		catch (SQLException e) {
+			log.log(Level.WARNING, e.getMessage());
+		}
+		finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+		return result;
+	}
 }

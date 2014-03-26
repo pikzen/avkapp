@@ -1,8 +1,7 @@
 <div class="row inscription">
-	<h1 class="page-name" ng-if="userConnected">Connexion</h1>
-    <h1 class="page-name" ng-if="!userConnected">Valider la déconnexion</h1>
-
+	<h1 class="page-name" ng-if="!userConnected">Connexion</h1>
 	<form ng-if="!userConnected" ng-submit="signin()">
+	<p>{{error}}</p>
 	<div class="large-12 columns register-info">
 		<!-- Login -->
 		<div class="row reginfo-login">
@@ -40,10 +39,10 @@
 			</div>
 		</div>
 	</div>
+
 	</form>
+	<h1 class="page-name" ng-if="userConnected">Valider la déconnexion</h1>
 	<form ng-if='userConnected' ng-submit="signout()">
 		<button class="button" type="submit">Se déconnecter</button>
 	</form>
-
-	<p>{{error}}</p>
 </div>

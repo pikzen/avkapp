@@ -17,9 +17,9 @@ public class Profile {
 
 	// Liste des permissions (bitflags)
 	public static final int PERM_LISTALLUSERS 				= 1;  // 00001
-	public static final int PERM_LISTSOMEUSERS				= 2;  // 00010
+	public static final int PERM_LISTOFFICEUSERS				= 2;  // 00010
 	public static final int PERM_VALIDATEALLUSERS			= 4;  // 00100
-	public static final int PERM_VALIDATESOMEUSERS			= 8;// 01000
+	public static final int PERM_VALIDATEOFFICEUSERS			= 8;// 01000
 	public static final int PERM_CREATEOFFICE				= 16;   // 10000
 	public static final int PERM_VALIDATEALLOFFICE 			= 32;
 	public static final int PERM_VALIDATEALLOFFICEJOIN 		= 64;
@@ -33,20 +33,24 @@ public class Profile {
 	public static final int PERM_LISTOFFICEPATIENT			= 16384;
 	public static final int PERM_LISTSELFPATIENT			= 32768;
 	public static final int PERM_ADDPATIENTMED				= 65536;
+	public static final int PERM_LISTALLWAITING				= 131072;
+	public static final int PERM_LISTOFFICEWAITING			= 262144;
 
 	public static HashMap<Integer, Integer> ROLES  = new HashMap<Integer, Integer>();
 	// Initialisation des valeurs
 	static {
 		ROLES.put(ROLE_ADMIN, PERM_LISTALLUSERS |
 							  PERM_VALIDATEALLUSERS |
+							  PERM_LISTALLWAITING |
+							  PERM_LISTOFFICEWAITING |
 							  PERM_CREATEOFFICE |
 							  PERM_VALIDATEALLOFFICE |
 							  PERM_VALIDATEALLOFFICEJOIN |
 							  PERM_VALIDATEBECOMEOFFICERESP |
 							  PERM_ADDMEDICATION);
 
-		ROLES.put(ROLE_RESPONSABLE, PERM_LISTSOMEUSERS |
-			                        PERM_VALIDATESOMEUSERS |
+		ROLES.put(ROLE_RESPONSABLE, PERM_LISTOFFICEUSERS |
+			                        PERM_VALIDATEOFFICEUSERS |
 			                        PERM_VALIDATESOMEOFFICEJOIN |
 			                        PERM_CREATEPATIENT |
 			                        PERM_MODIFYPATIENT |

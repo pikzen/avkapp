@@ -2,6 +2,7 @@ package com.avkapp.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.core.GenericEntity;
 import com.sun.jersey.api.json.JSONWithPadding;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -15,56 +16,62 @@ import com.avkapp.data.LoginInfo;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
+import com.avkapp.data.Profile;
+import com.avkapp.data.User;
 
 
 @Path("/users")
 public class UserResource {
 
+	// GET /users/waiting
 	@POST
-	@Path("{id}")
+	@Path("waiting")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUserById(@PathParam("id") String id, LoginInfo info) {
+	public Response getWaitingUsers(LoginInfo log) {
 		UserDAO uDao = new UserDAO();
 		Response response = null;
-
 		try {
-			User profile = uDao.getUser(info);
-			if (profile != null) {
-				response = Response.status(200).entity(profile).build();
+			List<User> waiting = uDao.getWaiting(log);
+
+			if (waiting != null) {
+				GenericEntity<List<User>> data = new GenericEntity<List<User>>(waiting) {};
+				response = Response.status(200).entity(data).build();
 			}
 			else {
-				response = Response.status(400).build();
+				response = Response.status(404).build();	
 			}
 		}
 		catch (SQLException e) {
-			Logger log = Logger.getLogger("AVKappLogger");
-			log.log(java.util.logging.Level.WARNING, e.getMessage());
 			response = Response.status(500).build();
 		}
 
 		return response;
+
+
 	}
 
-	@GET
+	// GET /users
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getJSONUsers() {
-		UserDAO inter = new UserDAO();
+	public Response getUsers(LoginInfo log) {
+		int privileges = Profile.PERM_LISTALLUSERS;
+		UserDAO uDao = new UserDAO();
 		Response response = null;
 
-		try {
-			ArrayList<User> all = inter.getAll(new LoginInfo());
-			Logger log = Logger.getLogger("AVKapp");
-			if (all != null) {
+		if (uDao.authorize(privileges, log.getUsername(), log.getPassword())) {
+			try {
+				ArrayList<User> waiting = uDao.listableUsers(log);
+				GenericEntity<ArrayList<User>> data = new GenericEntity<ArrayList<User>>(waiting) {};
+				response = Response.status(200).entity(data).build();
 			}
-			else {
+			catch (SQLException e) {
+				response = Response.status(500).build();
 			}
-			response = Response.status(200).entity(all).build();
 		}
-		catch (SQLException e) {
-			Logger log = Logger.getLogger("AVKappLogger");
-			log.log(java.util.logging.Level.WARNING, e.getMessage());
-			response = Response.status(500).build();
+		else {
+			response = Response.status(403).build();
 		}
 
 		return response;

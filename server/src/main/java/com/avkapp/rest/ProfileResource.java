@@ -70,12 +70,9 @@ public class ProfileResource {
 		Response response = null;
 
 		try {
-			ArrayList<Profile> all = inter.getAll();
+			ArrayList<Profile> all = inter.getAllPublic();
 			Logger log = Logger.getLogger("AVKapp");
-			if (all != null) {
-			}
-			else {
-			}
+
 			response = Response.status(200).
 			entity(all).
 			build();

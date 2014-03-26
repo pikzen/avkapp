@@ -57,10 +57,9 @@ public class LoginResource {
         }
 			}
 			else {
-        hm.put("error", "Informations de connexion incorrectes");
+        hm.put("error", "Informations de connexion incorrectes, ou bien votre compte n'est pas encore activé.");
         org.json.JSONObject data = new org.json.JSONObject(hm);
 				response = Response.status(400).entity(data.toString()).build();
-				Logger.getLogger("AVKAPP").log(Level.WARNING, log.toString());
 			}
 		}
 		catch (SQLException e) {

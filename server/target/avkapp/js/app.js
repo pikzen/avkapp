@@ -361,6 +361,28 @@ app.factory('loginService', ['$http', function($http){
 			});
 		}
 	}
+	function getWaitingUsers() {
+		if (User.isLogged) {
+			var body = {username: User.username, password: User.password}
+
+			$http.post("/avkapp/rest/users/waiting", body)
+			.success(function(data) {
+				console.log(data);
+				return data;
+			});
+		}
+	}
+	function getAllUsers() {
+		if (User.isLogged) {
+			var body = {username: User.username, password: User.password}
+
+			$http.post("/avkapp/rest/users", body)
+			.success(function(data) {
+				console.log(data);
+				return data;
+			});
+		}
+	}
 
 
 	return {
@@ -372,7 +394,7 @@ app.factory('loginService', ['$http', function($http){
 				User.password = loginInfo.password;
 				User.pin = pin;
 
-        User.firstname = data.firstname;
+        		User.firstname = data.firstname;
 				User.lastname = data.lastname;
 				User.email = data.email;
 				User.phone = data.phone;
@@ -401,7 +423,7 @@ app.factory('loginService', ['$http', function($http){
 		},
 		logout: function(callback) {
 			User = {};
-      User.isLogged = false;
+      		User.isLogged = false;
 			User.username = '';
 			User.pin = '';
 			User.password = '';
@@ -414,6 +436,12 @@ app.factory('loginService', ['$http', function($http){
 		},
 		getUser: function() {
 			return User;
+		},
+		listWaiting: function() {
+			return getWaitingUsers();
+		},
+		listUsers: function() {
+			return getAllUsers();
 		}
 	}
 }]);
@@ -603,7 +631,7 @@ app.controller('validateController',['$scope', 'loginService', function($scope, 
 app.controller('loginokController', ['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Validation d'utilisateurs";
 
-	$scope.fullname = Login.getUser().getFirstname() + " " + Login.getUser().getLastname();
+	$scope.fullname = Login.getUser().firstname + " " + Login.getUser().lastname;
 	$scope.userConnected = Login.isLogged();
 }]);
 
@@ -614,14 +642,19 @@ app.controller('useradminController',['$scope', 'loginService', '$http', functio
 	$scope.pageName = "Utilisateur";
   $scope.user = {};
   $scope.user.isLogged = false;
-
-
   $scope.officeInfo = {};
+  $scope.admin = {};
+  $scope.admin.waiting = {};
+  $scope.admin.users = {};
 
-  if (Login.isLogged()) {
-	  $scope.user = Login.getUser();
+  $scope.user = Login.getUser();
+
+  if ($scope.user.isAdmin) {
+  	$scope.admin.waiting = Login.listWaiting();
+  	$scope.admin.users = Login.listUsers();
   }
 
+  // --------------------------- Création d'un cabinet
   $scope.createOffice = function() {
     var body = {login: {username: $scope.user.username, password: $scope.user.password}, office: $scope.officeInfo};
     console.log(body);
@@ -638,6 +671,7 @@ app.controller('useradminController',['$scope', 'loginService', '$http', functio
 app.controller('loginController', ['$http', '$location', '$scope', 'loginService', function($http, $location, $scope, Login) {
 	$scope.pageName = "Connexion";
 	$scope.userConnected = Login.isLogged();
+	$scope.error = "";
 
 	$scope.loginInfo = {};
 
@@ -646,12 +680,12 @@ app.controller('loginController', ['$http', '$location', '$scope', 'loginService
 
 		Login.login(body, $scope.loginInfo.pin, function(){
 			if (Login.isLogged()) {
-				$scope.userConnected = Login.isLogged();
+				$scope.userConnected = true;
 				$location.path("/loginok");
 			}
 			else {
 				$scope.userConnected = false;
-				$scope.error = "Connexion refusée.";
+				$scope.error = "Connexion refusée. Vos identifiants sont incorrects, ou bien l'administrateur n'a pas encore validé votre compte.";
 			}
 		});
 
