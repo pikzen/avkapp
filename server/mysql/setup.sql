@@ -9,7 +9,8 @@ CREATE TABLE Office (
         Id          INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         Name        VARCHAR(40) NOT NULL,
         Address     VARCHAR(200) NOT NULL,
-        PhoneNumber VARCHAR(20) NOT NULL
+        PhoneNumber VARCHAR(20) NOT NULL,
+        Validated   BOOLEAN NOT NULL,
 ) ENGINE=INNODB;
 
 CREATE TABLE Profile (
@@ -230,4 +231,4 @@ INSERT INTO Medication(Name, INRImpact, Note) VALUES
 ("Sucralfate","-1","Prendre à distance de la Coumadine (plus de 2h)");
 
 INSERT INTO Profile(Name) VALUES ("Administrateur"), ("Responsable de cabinet"), ("Medecin"), ("Infirmier"), ("Patient");
-INSERT INTO Office(Name, Address, PhoneNumber) VALUES ("Aucun cabinet", "no-address", "no-phone"), ("Je créérai mon cabinet", "no-address", "no-phone");
+INSERT INTO Office(Name, Address, PhoneNumber, Validated) VALUES ("Aucun cabinet", "no-address", "no-phone", 1), ("Je créérai mon cabinet", "no-address", "no-phone", 1);

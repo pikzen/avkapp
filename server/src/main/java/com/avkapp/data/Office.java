@@ -17,6 +17,13 @@ public class Office {
 	@JsonProperty("phone")
 	private String Phone;
 
+	@JsonProperty("validated")
+	private int Validated;
+
+	public int getValidated() {
+		return this.Validated;
+	}
+
 	public int getId() {
 		return this.Id;
 	}
@@ -33,17 +40,20 @@ public class Office {
 		return this.Phone;
 	}
 
-	public Office(int i, String n, String a, String p) {
+	public Office(int i, String n, String a, String p, int v) {
 		this.Id = i;
 		this.Name = n;
 		this.Address = a;
 		this.Phone = p;
+		this.Validated = v;
 	}
 
   public Office(String n, String a, String p) {
     this.Name = n;
     this.Address = a;
     this.Phone = p;
+    this.Validated = 5;
+    this.Id = -1;
   }
 
   public Office() {
@@ -55,7 +65,8 @@ public class Office {
 						"id=" + Id + "," +
 				        "name=" + Name + "," +
 				        "address=" + Address + "," +
-				        "phone=" + Phone +
+				        "phone=" + Phone + "," +
+				        "validated=" + Validated + 
 				     "]";
 	}
 

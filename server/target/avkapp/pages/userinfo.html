@@ -189,7 +189,7 @@
 				</tbody>
 			</table>
 			<div class="categ-header">
-				<h3>Utilisateurs en attente</h3>
+				<h3>Utilisateurs à valider</h3>
 				<i class="fa fa-chevron-down" ng-click="ui.admin.usersWaitingCollapsed = !ui.admin.usersWaitingCollapsed"></i>
 			</div>
 			<table ng-show="!ui.admin.usersWaitingCollapsed">
@@ -210,7 +210,49 @@
 						<td>{{usr.email}}</td>
 						<td>{{usr.phone}}</td>
 						<td>{{usr.profile}}</td>
-						<td><i ng-click="adminValidate()" class="fa fa-check"></i></td>
+						<td><i ng-click="adminValidate({{usr.id}})" class="fa fa-check"></i></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="categ-header">
+				<h3>Cabinets <i class="fa fa-chevron-down" ng-click="ui.admin.officesCollapsed = !ui.admin.officesCollapsed"></i></h3>
+
+			</div>
+			<table ng-show="!ui.admin.officesCollapsed">
+				<thead>
+					<tr>
+						<td>Nom</td>
+						<td>Adresse</td>
+						<td>Téléphone</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="off in admin.offices">
+						<td>{{off.name}}</td>
+						<td>{{off.address}}</td>
+						<td>{{off.phone}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="categ-header">
+				<h3>Cabinets à valider <i class="fa fa-chevron-down" ng-click="ui.admin.officesValidateCollapsed = !ui.admin.officesValidateCollapsed"></i></h3>
+
+			</div>
+			<table ng-show="!ui.admin.officesValidateCollapsed">
+				<thead>
+					<tr>
+						<td>Nom</td>
+						<td>Adresse</td>
+						<td>Téléphone</td>
+						<td>Valider ?</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="off in admin.officesWaiting">
+						<td>{{off.name}}</td>
+						<td>{{off.address}}</td>
+						<td>{{off.phone}}</td>
+						<td><span ng-click="officeValidate({{off.id}})"><i class="fa fa-check"></i></span></td>
 					</tr>
 				</tbody>
 			</table>

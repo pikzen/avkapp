@@ -344,47 +344,6 @@ app.factory('loginService', ['$http', function($http){
 		password: ''
 	};
 
-	function getOfficeAsText() {
-		if (User.isLogged) {
-			$http.get("/avkapp/rest/offices/" + UserInfo.office.id)
-			.success(function(data) {
-				return data;
-			});
-		}
-	}
-
-	function getProfileAsText() {
-		if (User.isLogged) {
-			$http.get("/avkapp/rest/profiles/" + UserInfo.role.id)
-			.success(function(data) {
-				return data;
-			});
-		}
-	}
-	function getWaitingUsers() {
-		if (User.isLogged) {
-			var body = {username: User.username, password: User.password}
-
-			$http.post("/avkapp/rest/users/waiting", body)
-			.success(function(data) {
-				console.log(data);
-				return data;
-			});
-		}
-	}
-	function getAllUsers() {
-		if (User.isLogged) {
-			var body = {username: User.username, password: User.password}
-
-			$http.post("/avkapp/rest/users", body)
-			.success(function(data) {
-				console.log(data);
-				return data;
-			});
-		}
-	}
-
-
 	return {
 		login: function(loginInfo, pin, callback) {
 			$http.post("/avkapp/rest/login", loginInfo)
@@ -437,11 +396,18 @@ app.factory('loginService', ['$http', function($http){
 		getUser: function() {
 			return User;
 		},
-		listWaiting: function() {
-			return getWaitingUsers();
+		listWaiting: function(out) {
+
 		},
-		listUsers: function() {
-			return getAllUsers();
+		listUsers: function(out) {
+			if (User.isLogged) {
+				var body = {username: User.username, password: User.password}
+
+				$http.post("/avkapp/rest/users", body)
+				.success(function(data) {
+					out = data;
+				});
+			}
 		}
 	}
 }]);
@@ -644,14 +610,27 @@ app.controller('useradminController',['$scope', 'loginService', '$http', functio
   $scope.user.isLogged = false;
   $scope.officeInfo = {};
   $scope.admin = {};
-  $scope.admin.waiting = {};
-  $scope.admin.users = {};
 
   $scope.user = Login.getUser();
 
   if ($scope.user.isAdmin) {
-  	$scope.admin.waiting = Login.listWaiting();
-  	$scope.admin.users = Login.listUsers();
+		var body = {username: $scope.user.username, password: $scope.user.password}
+		$http.post("/avkapp/rest/users/waiting", body)
+		.success(function(data) {
+			$scope.admin.waiting = data;
+		});
+		$http.post("/avkapp/rest/users", body)
+		.success(function(data) {
+			$scope.admin.users = data;
+		});
+		$http.post("/avkapp/rest/offices", body)
+		.success(function(data)) {
+			$scope.admin.offices = data;
+		});
+		$http.post("/avkapp/rest/offices/waiting", body)
+		.success(function(data) {
+			$scope.admin.officesWaiting = data;
+		});
   }
 
   // --------------------------- Création d'un cabinet

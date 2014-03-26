@@ -79,12 +79,14 @@ public class OfficeResource {
 		UserDAO uDao = new UserDAO();
 		OfficeDAO oDao = new OfficeDAO();
 		Response response = null;
+		int privileges = Profile.PERM_LISTOFFICEWAITING;
+
 		if (uDao.authorize(privileges, log.getUsername(), log.getPassword())) {
 			try {
-				List<User> waiting = oDao.getWaiting(log);
+				ArrayList<Office> waiting = oDao.getWaiting(log);
 
 				if (waiting != null) {
-					GenericEntity<List<User>> data = new GenericEntity<List<User>>(waiting) {};
+					GenericEntity<List<Office>> data = new GenericEntity<List<Office>>(waiting) {};
 					response = Response.status(200).entity(data).build();
 				}
 				else {
