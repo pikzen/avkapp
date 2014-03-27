@@ -1,4 +1,11 @@
-"use strict"
+/*global $:false*/
+/*global console:false*/
+/*global angular:false*/
+/*global alert:false*/
+
+
+"use strict";
+
 var AideRapide = (function() {
 	var DEFAULT_VALUE		= -1;
 	var MED_PREVISCAN 		= 1;
@@ -46,9 +53,9 @@ var AideRapide = (function() {
 			setMessage("");
 
 			if (stage == STA_INITIATION) {
-				setValueInitiation(inr, typeMed, catPatient, inrtarget)
+				setValueInitiation(inr, typeMed, catPatient, inrtarget);
 			}
-			else  if (stage == STA_ENTRETIEN) {
+			else if (stage == STA_ENTRETIEN) {
 				setValueEntretien(inr, typeMed, inrtarget, hemorragie);
 			}
 			$("#inr-result-value").html("INR: " + inr);
@@ -301,7 +308,7 @@ var AideRapide = (function() {
 		UpdateSelects: function() {
 			updateSelects();
 		}
-	}
+	};
 }());
 
 
@@ -326,8 +333,8 @@ function toggleNavigation() {
 $(document).ready(function() {
 	$(".toggle-sidebar").click(function() {
 		toggleNavigation();
-	})
-})
+	});
+});
 
 
 /*
@@ -375,9 +382,10 @@ app.factory('loginService', ['$http', function($http){
 				User.hasOffice = (data.office != 1 && data.office != 2);
 
 				callback();
+				return true;
 			})
-			.error(function(data) {
-				console.log("Error ! Error !");
+			.error(function() {
+				return false;
 			});
 		},
 		logout: function(callback) {
@@ -395,21 +403,8 @@ app.factory('loginService', ['$http', function($http){
 		},
 		getUser: function() {
 			return User;
-		},
-		listWaiting: function(out) {
-
-		},
-		listUsers: function(out) {
-			if (User.isLogged) {
-				var body = {username: User.username, password: User.password}
-
-				$http.post("/avkapp/rest/users", body)
-				.success(function(data) {
-					out = data;
-				});
-			}
 		}
-	}
+	};
 }]);
 
 app.config(function($routeProvider) {
@@ -459,15 +454,69 @@ app.config(function($routeProvider) {
 		templateUrl: 'pages/login.html',
 		controller: 'loginController'
 	})
+	.when("/addpatient", {
+		templateUrl:'pages/addpatient.html',
+		controller: 'addpatientController'
+	})
+	.when("/pickpatient", {
+		templateUrl: 'pages/pickpatient',
+		controller: 'pickpatientController'
+	})
 
 	.otherwise({redirectTo: '/'});
 });
 
 
 app.controller('regokController', ['$scope', 'loginService', function($scope, Login) {
+	$scope.userConnected = Login.isLogged();
+}]);
+app.controller('addpatientController', ['$scope', 'loginService', '$http', '$location', function($scope, Login, $http, $location) {
+	$scope.user = {};
+  	$scope.user.isLogged = false;
+
+  	$scope.user = Login.getUser();
+
+  	$scope.addpatient = function() {
+  		if ($scope.patient.firstname && $scope.patient.lastname && $scope.patient.insee && $scope.patient.targetinr && $scope.patient.treatment.med && $scope.patient.treatment.phase) {
+
+  			var body = {loginpin: {
+  							username: $scope.user.username,
+  							password: $scope.user.password,
+  							pin: $scope.user.pin
+  						},
+  						patient: {
+  							firstname: $scope.patient.firstname,
+  							lastname: $scope.patient.lastname,
+  							email: $scope.patient.phone,
+  							date: $scope.patient.date,
+  							address: $scope.patient.address,
+  							phone: $scope.patient.phone,
+  							targetinr: $scope.patient.targetinr,
+  							specialinr: $scope.patient.specialinr,
+  							treatment: {
+  								phase: $scope.patient.treatment.phase,
+  								med: $scope.patient.treatment.med
+  							}
+  						}
+  					};
+
+  			$http.post("/avkapp/rest/patient/add", body)
+  			.success(function() {
+  				alert("Le patient a bien été ajouté !");
+  				$location.path("#/user");
+  			})
+  			.error(function() {
+  				$scope.error = "Impossible d'ajouter le patient. Le PIN entré n'est peut être pas le bon. "
+  			});
+  		}
+  	};
+}]);
+
+app.controller('pickpatientController', ['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Pls halp";
 	$scope.userConnected = Login.isLogged();
 }]);
+
 
 app.controller('aiderapideController',['$scope', 'loginService', function($scope, Login) {
 	$scope.pageName = "Aide Rapide";
@@ -571,11 +620,11 @@ app.controller('inscriptionController',['$scope', '$http', '$location', 'loginSe
 				$scope.response = data;
 				console.log(data);
 			})
-			.error(function(data) {
+			.error(function() {
 				$scope.status = "Le serveur est indisponible. Impossible de se connecter.";
 			});
 		}
-	}
+	};
 	$scope.userConnected = Login.isLogged();
 }]);
 
@@ -604,7 +653,7 @@ app.controller('loginokController', ['$scope', 'loginService', function($scope, 
 /*
 * #/user
 */
-app.controller('useradminController',['$scope', 'loginService', '$http', function($scope, Login, $http) {
+app.controller('useradminController',['$scope', 'loginService', '$http', '$location', function($scope, Login, $http, $location) {
 	$scope.pageName = "Utilisateur";
   $scope.user = {};
   $scope.user.isLogged = false;
@@ -614,7 +663,7 @@ app.controller('useradminController',['$scope', 'loginService', '$http', functio
   $scope.user = Login.getUser();
 
   if ($scope.user.isAdmin) {
-		var body = {username: $scope.user.username, password: $scope.user.password}
+		var body = {username: $scope.user.username, password: $scope.user.password};
 
 		$http.post("/avkapp/rest/users/waiting", body)
 		.success(function(data) {
@@ -643,11 +692,13 @@ app.controller('useradminController',['$scope', 'loginService', '$http', functio
     console.log(body);
 
     $http.put("/avkapp/rest/offices", body)
-    .success(function(data) {
-      alert("Ok");
+    .success(function() {
+      alert("Le cabinet a été ajouté. L'administrateur devra le valider.");
+      $scope.officeInfo = {};
+      $location.path("#/user");
     })
-    .error(function(data) {
-      alert("Error");
+    .error(function() {
+      $scope.officeError = "Impossible d'ajouter le cabinet.";
     });
   };
 }]);
@@ -696,23 +747,22 @@ app.controller('historiqueController',['$scope', 'loginService','$http', functio
 		$scope.patientId = id;
 		$scope.patientSelected = true;
 
-		var body = {username: $scope.user.username, 
+		var body = {username: $scope.user.username,
 					password: $scope.user.password,
-					pin:      $scope.user.pin}
+					pin:      $scope.user.pin};
 
 		$http.post("/avkapp/rest/historique/" + $scope.patientId, body)
 		.success(function(data) {
 			$scope.currentPat = data;
-			$scope.histo =
 		})
-		.error(function(data) {
-			$scope.message = "Impossible de récupérer les informations du patient."
-		})
+		.error(function() {
+			$scope.message = "Impossible de récupérer les informations du patient.";
+		});
 	};
 
-	$scope.addHistorique = function(id) {
+	$scope.addHistorique = function() {
 		var body = {loginpin: {
-						username: $scope.user.username, 
+						username: $scope.user.username,
 						password: $scope.user.password,
 						pin:      $scope.user.pin
 					},
@@ -728,7 +778,7 @@ app.controller('historiqueController',['$scope', 'loginService','$http', functio
 			$scope.currentPat.historique.push(data);
 			$scope.message = "Valeurs inserées dans la base de données.";
 		})
-		.error(function(data) {
+		.error(function() {
 			$scope.message = "Impossible d'insérer dans la base de données. Vérifiez que vous avez entré le bon PIN.";
 		});
 	};

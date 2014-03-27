@@ -1,0 +1,119 @@
+<div ng-controller="addpatientController">
+	<h1>Ajouter un patient</h1>
+	<div ng-if="!user.isLogged">
+		<p>Vous n'êtes pas connecté. <a href="#/login">Connectez vous.</a></p>
+	</div>
+	<div ng-if="!user.isResponsable && !user.isAdmin">
+		<p>Vous n'avez pas les droits requis pour effectuer cette action.</p>
+	</div>
+	<form ng-submit="addpatient()" ng-if="user.isResponsable || user.isAdmin">
+		<div class="row">
+			<div class="large-2 columns">
+				<label>Nom</label>
+			</div>
+			<div class="large-10 columns">
+				<input type="text" ng-model="patient.lastname" required></input>
+				<span class="error" ng-if="!patient.lastname">Veuillez remplir ce champ</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>Prénom</label>
+			</div>
+			<div class="large-10 columns">
+				<input type="text" ng-model="patient.firstname" required></input>
+				<span class="error" ng-if="!patient.firstname">Veuillez remplir ce champ</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>Email</label>
+			</div>
+			<div class="large-10 columns">
+				<input type="text" ng-model="patient.email"></input>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>Téléphone</label>
+			</div>
+			<div class="large-10 columns">
+				<input type="text" ng-model="patient.phone"></input>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>Date de naissance</label>
+			</div>
+			<div class="large-10 columns">
+				<input type="date" ng-model="patient.date"></input>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>Adresse</label>
+			</div>
+			<div class="large-10 columns">
+				<input type="text" ng-model="patient.address"></input>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>INSEE</label>
+			</div>
+			<div class="large-10 columns">
+				<input type="text" ng-model="patient.insee" required></input>
+				<span class="error" ng-if="!patient.insee">Veuillez remplir ce champ</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>INR Cible</label>
+			</div>
+			<div class="large-10 columns">
+				<input type="text" ng-model="patient.targetinr" required></input>
+				<span class="error" ng-if="!patient.targetinr">Veuillez remplir ce champ</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>Phase du traitement</label>
+			</div>
+			<div class="large-10 columns">
+				<select ng-model="patient.treatment.phase" required>
+					<option ng-repeat="phase in phases" value="{{phase.id}}">{{phase.text}}</option>
+				</select>
+				<span class="error" ng-if="!patient.treatment.phase">Veuillez remplir ce champ</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>Médicament</label>
+			</div>
+			<div class="large-10 columns">
+				<select ng-model="patient.treatment.med" required>
+					<option ng-repeat="med in meds" value="{{med.id}}">{{med.text}}</option>
+				</select>
+			</div>
+			<span class="error" ng-if="!patient.treatment.med">Veuillez remplir ce champ</span>
+		</div>
+		<div class="row">
+			<div class="large-2 columns">
+				<label>INR Cible situé entre 3 et 4 ?</label>
+			</div>
+			<div class="large-10 columns">
+				<input type="checkbox" ng-model="patient.specialinr"></input>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-12 columns">
+				<p class="error">{{error}}</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="large-12 columns">
+				<button type="submit" class="button">Valider</button>
+			</div>
+		</div>
+	</form>
+</div> 

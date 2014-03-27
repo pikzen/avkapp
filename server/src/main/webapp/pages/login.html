@@ -1,4 +1,4 @@
-<div class="row inscription">
+<div class="row inscription" ng-controller="loginController">
 	<h1 class="page-name" ng-if="!userConnected">Connexion</h1>
 	<form ng-if="!userConnected" ng-submit="signin()">
 	<p>{{error}}</p>
@@ -30,6 +30,7 @@
 			</div>
 			<div class="large-10 columns">
 				<input class="columns" type="password" placeholder="PIN" ng-model="loginInfo.pin"></input>
+				<span class="small">Attention : votre PIN n'est pas vérifié à la connexion. Si il est faux, vous ne pourrez pas accèder aux données.</span>
 			</div>
 		</div>
 

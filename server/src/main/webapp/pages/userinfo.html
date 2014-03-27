@@ -8,11 +8,13 @@
 
 	<div class="large-12 columns valid-user">
 		<div class="row user">
-			<div class="large-12 columns">
+			<div class="large-6 columns">
 				<h5>Email : </h5>
 				<p>{{user.email}}</p>
 				<h5>Téléphone : </h5>
 				<p>{{user.phone}}
+			</div>
+			<div class="large-6 columns">
 				<h5>Fonction : </h5>
 				<p>{{user.role.text}}</p>
 				<h5>Cabinet : </h5>
@@ -58,13 +60,8 @@
 			</table>
 		</div>
 
-	<h2>Gestion du compte</h2>
-	<a href="#/changeoffice" >Changer de cabinet</a>
-
-	<div class="responsable user-section" ng-if="user.isResponsable">
-			<h2>Gestion du cabinet</h2>
-		</div>
-		<div class="responsable-office-user-list">
+	<a href="#/changeoffice" ng-if="!user.isAdmin">Changer de cabinet</a>
+	<div class="responsable-office-user-list" ng-if="(user.isResponsable && !user.hasOffice) || user.isAdmin">
 			<div class="categ-header">
 				<h3>Créér un cabinet</h3>
 			</div>
@@ -95,11 +92,22 @@
 						<input type="text" placeholder="Téléphone" ng-model="officeInfo.phone"></input>
 					</div>
 				</div>
+				<div class="row">
+					<div class="large-12 columns">
+					<p class="error">{{officeError}}</p>
+					</div>
+				</div>
 
 				<div class="row">
 					<button class="button" type="submit">Créér</button>
 				</div>
 			</form>
+		</div>
+
+	<div class="responsable user-section" ng-if="user.isResponsable">
+		<div class="responsable-create-patient">
+			<a href="#/createpatient">Créér un patient</a>
+			<a href="#/pickpatient">Ajouter un patient au cabinet</a>
 		</div>
 		<div class="responsable-office-user-list user-section">
 			<div class="categ-header">
@@ -156,9 +164,6 @@
 	</div>
 
 	<div class="admin" ng-if="user.isAdmin">
-		<div class="admin-separator">
-			<h2>Administration</h2>
-		</div>
 		<div class="admin-user-list">
 			<div class="categ-header">
 				<h3>Utilisateurs <i class="fa fa-chevron-down" ng-click="ui.admin.usersCollapsed = !ui.admin.usersCollapsed"></i></h3>
